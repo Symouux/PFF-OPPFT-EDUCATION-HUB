@@ -64,30 +64,38 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // Login
-    public function login(Request $request)
+    public function login(Request $req)
     {
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->mot_de_passe
-        ];
+        $email = $req->email;
+        $password = $req->mot_de_passe;
 
-        if(!$token = auth()->attempt($credentials)){
+        // 1/ Find User, ElAnani Comment
+        $user = Utilisateur::where('email', $email)->first();
+
+        if(!$user){
             return response()->json([
-                'message' => 'Invalid credentials'
+                'message' => 'User not found !'
+            ], 404);
+        }
+
+        // 2/ Compare Password, ElAnani Comment
+        if(!Hash::check($password, $user->mot_de_passe)){
+            response()->json([
+                'message' => 'Password Invalid !'
             ], 401);
         }
 
-        return response()->json([
-            'token' => $token
-        ]);
-    }
+        // 3/ Generate JWT, ElAnani Comment
+        $token = auth()->login($user);
 
-    public function me()
-    {
-        return response()->json(
-            auth()->user()->load('profil')
-        );
+        return response()->json([
+            'token' => $token,
+            'user' => [
+                'email' => $user->email,
+                'role' => $user->role
+            ]
+        ]);
+
     }
 
     public function logout()
