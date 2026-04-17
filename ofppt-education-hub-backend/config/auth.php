@@ -18,8 +18,23 @@ return [
 
     'defaults' => [
         'guard' => 'api',
-        'passwords' => 'utilisateurs',
     ],
+
+    'guards' => [
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'utilisateurs',
+        ],
+    ],
+
+    'providers' => [
+        'utilisateurs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Utilisateur::class,
+        ],
+    ],
+
+
 
     /*
     |--------------------------------------------------------------------------
