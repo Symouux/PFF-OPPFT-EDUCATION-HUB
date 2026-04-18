@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     } else {
       setLoading(false);
     }
-  }, [token, logout]); // ✅ correction ici
+  }, [token, logout]); 
 
   const login = async (email, password) => {
     const res = await axios.post("/login", {
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     nom_complet,
     email,
     mot_de_passe,
-    password_confirmation
+    password_confirmation,
   ) => {
     const res = await axios.post("/register", {
       nom_complet: nom_complet,
