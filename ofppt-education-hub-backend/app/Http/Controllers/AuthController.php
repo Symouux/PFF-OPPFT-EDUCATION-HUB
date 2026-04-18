@@ -80,7 +80,7 @@ class AuthController extends Controller
 
         // 2/ Compare Password, ElAnani Comment
         if(!Hash::check($password, $user->mot_de_passe)){
-            response()->json([
+            return response()->json([
                 'message' => 'Password Invalid !'
             ], 401);
         }
