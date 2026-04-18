@@ -8,6 +8,16 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [loading, setLoading] = useState(true);
 
+  const logout = async () => {
+    try {
+      await axios.post("/logout");
+    } catch (_) {}
+
+    localStorage.removeItem("token");
+    setToken(null);
+    setUser(null);
+  };
+
   useEffect(() => {
     if (token) {
       axios
@@ -18,32 +28,12 @@ export const AuthProvider = ({ children }) => {
     } else {
       setLoading(false);
     }
-  }, [token]);
+  }, [token, logout]); 
 
   const login = async (email, password) => {
-    const res = await axios.post("/login", { email, password });
-
-    const { token, user } = res.data;
-
-    localStorage.setItem("token", token);
-    setToken(token);
-    setUser(user);
-
-    return user;
-  };
-
-  // CORRECTION ICI
-  const register = async (
-    nom_complet,
-    email,
-    password,
-    password_confirmation,
-  ) => {
-    const res = await axios.post("/register", {
-      nom_complet: nom_complet,
-      email: email,
-      password: password,
-      password_confirmation: password_confirmation,
+    const res = await axios.post("/login", {
+      email,
+      mot_de_passe: password,
     });
 
     const { token, user } = res.data;
@@ -55,14 +45,26 @@ export const AuthProvider = ({ children }) => {
     return user;
   };
 
-  const logout = async () => {
-    try {
-      await axios.post("/logout");
-    } catch (_) {}
+  const register = async (
+    nom_complet,
+    email,
+    mot_de_passe,
+    password_confirmation,
+  ) => {
+    const res = await axios.post("/register", {
+      nom_complet: nom_complet,
+      email: email,
+      mot_de_passe: mot_de_passe,
+      password_confirmation: password_confirmation,
+    });
 
-    localStorage.removeItem("token");
-    setToken(null);
-    setUser(null);
+    const { token, user } = res.data;
+
+    localStorage.setItem("token", token);
+    setToken(token);
+    setUser(user);
+
+    return user;
   };
 
   return (

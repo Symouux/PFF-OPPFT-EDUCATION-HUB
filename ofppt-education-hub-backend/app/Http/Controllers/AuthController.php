@@ -10,91 +10,120 @@ class AuthController extends Controller
 {
     public function register(Request $req)
     {
-        $email = $req->email;
+        $email        = $req->email;
         $mot_de_passe = $req->mot_de_passe;
-        $role = $req->role ?? 'etudiant';
+        $role         = $req->role ?? 'etudiant';
 
-        // 1/ Email Check, ElAnani Comment
+        // 1/ Email Check
         $exists = Utilisateur::where('email', $email)->first();
-
         if ($exists) {
             return response()->json([
                 'message' => 'Email Deja Existe !'
-            ], 401);
+            ], 409); // ✅ 409 Conflict au lieu de 401
         }
 
-        // 2/ Role Check, ElAnani Comment
+        // 2/ Role Check
         if (!in_array($role, ['etudiant', 'mentor', 'admin'])) {
             return response()->json([
-                'message' => 'Invalid role'
+                'message' => 'Rôle invalide'
             ], 400);
         }
 
-        // 2/ Password Hash, ElAnani Comment
+        // 3/ Password Hash
         $mot_de_passe_hash = Hash::make($mot_de_passe);
 
-        // 3/ Create User, ElAnani Comment
+        // 4/ Create User
         $user = Utilisateur::create([
-            'email' => $email,
-            'mot_de_passe' => $mot_de_passe_hash,
-            'role' => $role,
+            'email'            => $email,
+            'mot_de_passe'     => $mot_de_passe_hash,
+            'role'             => $role,
             'date_inscription' => now()
         ]);
 
-        // 4/ Upload Picture, ElAnani Comment
+        // 5/ Upload Picture
         $photoPath = null;
-
         if ($req->hasFile('photo')) {
             $photoPath = $req->file('photo')->store('profiles', 'public');
         }
 
-        // 5/ Create Profile, ElAnani Comment
+        // 6/ Create Profile
         $user->profil()->create([
-            'nom_complet' => $req->nom_complet,
-            'bio' => $req->bio,
-            'photo' => $photoPath,
-            'lien_linkedin' => $req->lien_linkedin,
-            'lien_github' => $req->lien_github,
+            'nom_complet'   => $req->nom_complet ?? '',
+            'bio'           => $req->bio ?? '',
+            'photo'         => $photoPath,
+            'lien_linkedin' => $req->lien_linkedin ?? '',
+            'lien_github'   => $req->lien_github ?? '',
             'score_mensuel' => 0
         ]);
 
+        // ✅ Générer le token après inscription
+        $token = auth()->login($user);
+
         return response()->json([
-            'message' => 'User Ajoute Avec Success !',
-            'user' => $user->load('profil')
-        ], 200);
+            'token' => $token,        // ✅ AJOUTÉ
+            'user'  => [
+                'id'    => $user->id,
+                'email' => $user->email,
+                'role'  => $user->role,
+            ]
+        ], 201);
     }
 
     public function login(Request $req)
     {
-        $email = $req->email;
+        $email    = $req->email;
         $password = $req->mot_de_passe;
 
-        // 1/ Find User, ElAnani Comment
+        // 1/ Find User
         $user = Utilisateur::where('email', $email)->first();
-
         if (!$user) {
             return response()->json([
-                'message' => 'User not found !'
-            ], 404);
+                'message' => 'Email introuvable !'
+            ], 401); // ✅ 401 au lieu de 404
         }
 
-        // 2/ Compare Password, ElAnani Comment
+        // 2/ Compare Password
         if (!Hash::check($password, $user->mot_de_passe)) {
             return response()->json([
-                'message' => 'Password Invalid !'
+                'message' => 'Mot de passe incorrect !'
             ], 401);
         }
 
-        // 3/ Generate JWT, ElAnani Comment
+        // 3/ Generate JWT
         $token = auth()->login($user);
+
+        if (!$token) {
+            return response()->json([
+                'message' => 'Erreur génération token JWT'
+            ], 500);
+        }
 
         return response()->json([
             'token' => $token,
-            'user' => [
+            'user'  => [
+                'id'    => $user->id,
                 'email' => $user->email,
-                'role' => $user->role
+                'role'  => $user->role,  // ✅ rôle obligatoire
             ]
-        ]);
+        ], 200);
+    }
+
+    // ✅ MÉTHODE AJOUTÉE — manquait complètement
+    public function me()
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Non authentifié'
+            ], 401);
+        }
+
+        return response()->json([
+            'id'    => $user->id,
+            'email' => $user->email,
+            'role'  => $user->role,
+        ], 200);
     }
 
     public function logout()
@@ -102,7 +131,7 @@ class AuthController extends Controller
         auth()->logout();
 
         return response()->json([
-            'message' => 'Logged out'
-        ]);
+            'message' => 'Déconnecté avec succès'
+        ], 200);
     }
 }
