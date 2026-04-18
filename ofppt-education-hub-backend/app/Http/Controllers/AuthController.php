@@ -17,14 +17,14 @@ class AuthController extends Controller
         // 1/ Email Check, ElAnani Comment
         $exists = Utilisateur::where('email', $email)->first();
 
-        if($exists){
+        if ($exists) {
             return response()->json([
                 'message' => 'Email Deja Existe !'
             ], 401);
         }
 
         // 2/ Role Check, ElAnani Comment
-        if(!in_array($role, ['etudiant', 'mentor', 'admin'])){
+        if (!in_array($role, ['etudiant', 'mentor', 'admin'])) {
             return response()->json([
                 'message' => 'Invalid role'
             ], 400);
@@ -44,7 +44,7 @@ class AuthController extends Controller
         // 4/ Upload Picture, ElAnani Comment
         $photoPath = null;
 
-        if($req->hasFile('photo')){
+        if ($req->hasFile('photo')) {
             $photoPath = $req->file('photo')->store('profiles', 'public');
         }
 
@@ -72,14 +72,14 @@ class AuthController extends Controller
         // 1/ Find User, ElAnani Comment
         $user = Utilisateur::where('email', $email)->first();
 
-        if(!$user){
+        if (!$user) {
             return response()->json([
                 'message' => 'User not found !'
             ], 404);
         }
 
         // 2/ Compare Password, ElAnani Comment
-        if(!Hash::check($password, $user->mot_de_passe)){
+        if (!Hash::check($password, $user->mot_de_passe)) {
             return response()->json([
                 'message' => 'Password Invalid !'
             ], 401);
@@ -95,7 +95,6 @@ class AuthController extends Controller
                 'role' => $user->role
             ]
         ]);
-
     }
 
     public function logout()
@@ -106,6 +105,4 @@ class AuthController extends Controller
             'message' => 'Logged out'
         ]);
     }
-
-
 }
