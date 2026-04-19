@@ -105,4 +105,24 @@ class AuthController extends Controller
             'message' => 'Logged out'
         ]);
     }
+
+    public function me()
+    {
+        try{
+            // - Store User Info in A Variable, Elanani Comment
+            $user = auth()->user();
+
+            return response()->json([
+                // - All User Info, Elanani Comment
+                'user' => $user,
+
+                // - Just User Name and His Role, Elanani Comment
+                'profil' => $user->profil
+            ]);
+        }catch(\Exception $err) {
+            return response()->json([
+                'error' => $err->getMessage()
+            ], 500);
+        }
+    }
 }
