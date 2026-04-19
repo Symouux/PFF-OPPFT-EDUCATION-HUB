@@ -19,7 +19,7 @@ class AuthController extends Controller
         if ($exists) {
             return response()->json([
                 'message' => 'Email Deja Existe !'
-            ], 409); // ✅ 409 Conflict au lieu de 401
+            ], 409); //  409 Conflict au lieu de 401
         }
 
         // 2/ Role Check
@@ -56,11 +56,11 @@ class AuthController extends Controller
             'score_mensuel' => 0
         ]);
 
-        // ✅ Générer le token après inscription
+        // Générer le token après inscription
         $token = auth()->login($user);
 
         return response()->json([
-            'token' => $token,        // ✅ AJOUTÉ
+            'token' => $token,        //  AJOUTÉ
             'user'  => [
                 'id'    => $user->id,
                 'email' => $user->email,
@@ -79,7 +79,7 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json([
                 'message' => 'Email introuvable !'
-            ], 401); // ✅ 401 au lieu de 404
+            ], 401); //  401 au lieu de 404
         }
 
         // 2/ Compare Password
@@ -103,12 +103,12 @@ class AuthController extends Controller
             'user'  => [
                 'id'    => $user->id,
                 'email' => $user->email,
-                'role'  => $user->role,  // ✅ rôle obligatoire
+                'role'  => $user->role,
             ]
         ], 200);
     }
 
-    // ✅ MÉTHODE AJOUTÉE — manquait complètement
+    //  MÉTHODE AJOUTÉE — manquait complètement
     public function me()
     {
         $user = auth()->user();
