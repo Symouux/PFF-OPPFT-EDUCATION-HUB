@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class Utilisateur extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject
 {
-    protected $table = 'utilisateurs';
-
+    use HasFactory;
     protected $fillable = [
         'email',
-        'mot_de_passe',
+        'password',
         'role',
         'date_inscription'
     ];
@@ -19,14 +19,8 @@ class Utilisateur extends Authenticatable implements JWTSubject
     public $timestamps = false;
 
     protected $hidden = [
-        'mot_de_passe'
+        'password'
     ];
-
-    // For Login Password
-    public function getAuthPassword()
-    {
-        return $this->mot_de_passe;
-    }
 
     // JWT Unique Id
     public function getJWTIdentifier()
@@ -44,7 +38,7 @@ class Utilisateur extends Authenticatable implements JWTSubject
 
     public function profil()
     {
-        return $this->hasOne(Profil::class, 'utilisateur_id');
+        return $this->hasOne(Profil::class, 'user_id');
     }
 
 }

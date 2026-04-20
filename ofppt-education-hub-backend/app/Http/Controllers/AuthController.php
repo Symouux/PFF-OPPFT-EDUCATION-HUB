@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Utilisateur;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -11,11 +11,11 @@ class AuthController extends Controller
     public function register(Request $req)
     {
         $email = $req->email;
-        $mot_de_passe = $req->mot_de_passe;
+        $password = $req->password;
         $role = $req->role ?? 'etudiant';
 
         // 1/ Email Check, ElAnani Comment
-        $exists = Utilisateur::where('email', $email)->first();
+        $exists = User::where('email', $email)->first();
 
         if ($exists) {
             return response()->json([
@@ -31,12 +31,12 @@ class AuthController extends Controller
         }
 
         // 2/ Password Hash, ElAnani Comment
-        $mot_de_passe_hash = Hash::make($mot_de_passe);
+        $password_hash = Hash::make($password);
 
         // 3/ Create User, ElAnani Comment
-        $user = Utilisateur::create([
+        $user = User::create([
             'email' => $email,
-            'mot_de_passe' => $mot_de_passe_hash,
+            'password' => $password_hash,
             'role' => $role,
             'date_inscription' => now()
         ]);
@@ -67,10 +67,10 @@ class AuthController extends Controller
     public function login(Request $req)
     {
         $email = $req->email;
-        $password = $req->mot_de_passe;
+        $password = $req->password;
 
         // 1/ Find User, ElAnani Comment
-        $user = Utilisateur::where('email', $email)->first();
+        $user = User::where('email', $email)->first();
 
         if (!$user) {
             return response()->json([
@@ -79,7 +79,7 @@ class AuthController extends Controller
         }
 
         // 2/ Compare Password, ElAnani Comment
-        if (!Hash::check($password, $user->mot_de_passe)) {
+        if (!Hash::check($password, $user->password)) {
             return response()->json([
                 'message' => 'Password Invalid !'
             ], 401);
