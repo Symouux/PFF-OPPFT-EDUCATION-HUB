@@ -1,4 +1,6 @@
 import AuthPage from "./pages/AuthPage";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import { Routes, Route, Navigate } from "react-router-dom";
 const AdminPage = () => <h1>Page Admin</h1>;
 const MentorPage = () => <h1>Page Mentor</h1>;
@@ -10,6 +12,8 @@ export default function App() {
       {/* Route principale */}
       <Route path="/" element={<Navigate to="/auth" />} />
       <Route path="/auth" element={<AuthPage />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/mentor" element={<MentorPage />} />

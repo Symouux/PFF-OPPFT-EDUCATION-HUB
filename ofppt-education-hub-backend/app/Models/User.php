@@ -2,13 +2,25 @@
 
 namespace App\Models;
 
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
+
+    use Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'email',
         'password',
@@ -16,19 +28,45 @@ class User extends Authenticatable implements JWTSubject
         'date_inscription'
     ];
 
-    public $timestamps = false;
-
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = [
-        'password'
+        'password',
+        'remember_token',
+        'two_factor_recovery_codes',
+        'two_factor_secret',
     ];
 
-    // JWT Unique Id
+    public $timestamps = false;
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    // Virtual 'name' attribute for Jetstream compatibility
+    public function getNameAttribute()
+    {
+        return $this->profil?->nom_complet ?? $this->email;
+    }
+
+    // JWT Methods
     public function getJWTIdentifier()
     {
         return $this->getKey();
     }
 
-    // Extra Data Inside Token
     public function getJWTCustomClaims()
     {
         return [
@@ -36,9 +74,9 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    // Relationship
     public function profil()
     {
         return $this->hasOne(Profil::class, 'user_id');
     }
-
 }

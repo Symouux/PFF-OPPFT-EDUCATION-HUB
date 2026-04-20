@@ -67,9 +67,17 @@ export const AuthProvider = ({ children }) => {
     return user;
   };
 
+  const forgotPassword = async (email) => {
+    await axios.post("/forgot-password", { email });
+  };
+
+  const resetPassword = async (data) => {
+    await axios.post("/reset-password", data);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, token, login, register, logout, loading }}
+      value={{ user, token, login, register, logout, loading, forgotPassword, resetPassword }}
     >
       {children}
     </AuthContext.Provider>
