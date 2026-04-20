@@ -9,7 +9,7 @@ class Profil extends Model
     protected $table = 'profils';
 
     protected $fillable = [
-        'utilisateur_id',
+        'user_id',
         'nom_complet',
         'bio',
         'photo',
@@ -18,8 +18,8 @@ class Profil extends Model
         'score_mensuel'
     ];
 
-    public function utilisateur()
+    public function user()
     {
-        return $this->belongsTo(Utilisateur::class, 'utilisateur_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

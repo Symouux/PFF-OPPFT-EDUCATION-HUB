@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const res = await axios.post("/login", {
       email,
-      mot_de_passe: password,
+      password: password,
     });
 
     const { token, user } = res.data;
@@ -48,13 +48,13 @@ export const AuthProvider = ({ children }) => {
   const register = async (
     nom_complet,
     email,
-    mot_de_passe,
+    password,
     password_confirmation,
   ) => {
     const res = await axios.post("/register", {
       nom_complet: nom_complet,
       email: email,
-      mot_de_passe: mot_de_passe,
+      password: password,
       password_confirmation: password_confirmation,
     });
 
