@@ -21,7 +21,7 @@ export default function AuthPage() {
   const [registerData, setRegisterData] = useState({
     nom_complet: "",
     email: "",
-    mot_de_passe: "",
+    password: "",
     password_confirmation: "",
   });
 
@@ -85,14 +85,14 @@ export default function AuthPage() {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
-    if (!passwordRegex.test(registerData.mot_de_passe)) {
+    if (!passwordRegex.test(registerData.password)) {
       setRegisterError(
         "Min 8 caractères, 1 majuscule, 1 chiffre, 1 caractère spécial"
       );
       return;
     }
 
-    if (registerData.mot_de_passe !== registerData.password_confirmation) {
+    if (registerData.password !== registerData.password_confirmation) {
       setRegisterError("Les mots de passe ne correspondent pas");
       return;
     }
@@ -101,8 +101,8 @@ export default function AuthPage() {
       await register(
         registerData.nom_complet,
         registerData.email,
-        registerData.mot_de_passe,
-        registerData.password_confirmation
+        registerData.password,
+        registerData.password_confirmation,
       );
 
       setIsActive(false); // يرجع login
@@ -154,7 +154,7 @@ export default function AuthPage() {
                 onChange={(e) => {
                   setRegisterData({
                     ...registerData,
-                    mot_de_passe: e.target.value,
+                    password: e.target.value,
                   });
                   setPwStrength(getStrength(e.target.value));
                 }}
@@ -178,8 +178,7 @@ export default function AuthPage() {
                 />
               ))}
             </div>
-
-            {registerData.mot_de_passe && (
+            {registerData.password && (
               <span
                 className="strength-label"
                 style={{ color: strengthConfig[pwStrength].color }}

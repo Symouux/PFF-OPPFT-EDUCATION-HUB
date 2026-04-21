@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(async () => {
     try {
       await axios.post("/logout");
-    } catch (_) {}
+    } catch (_) { }
 
     localStorage.removeItem("token");
     setToken(null);
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const res = await axios.post("/login", {
       email,
-      mot_de_passe: password,
+      password: password,
     });
 
     const { token, user, profil } = res.data;
@@ -51,14 +51,14 @@ export const AuthProvider = ({ children }) => {
   const register = async (
     nom_complet,
     email,
-    mot_de_passe,
-    password_confirmation
+    password,
+    password_confirmation,
   ) => {
     const res = await axios.post("/register", {
-      nom_complet,
-      email,
-      mot_de_passe,
-      password_confirmation,
+      nom_complet: nom_complet,
+      email: email,
+      password: password,
+      password_confirmation: password_confirmation,
     });
 
     const { token, user, profil } = res.data;
@@ -68,12 +68,20 @@ export const AuthProvider = ({ children }) => {
 
     setUser({ user, profil });
 
-    return { user, profil };
+    return user;
+  };
+
+  const forgotPassword = async (email) => {
+    await axios.post("/forgot-password", { email });
+  };
+
+  const resetPassword = async (data) => {
+    await axios.post("/reset-password", data);
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, token, login, register, logout, loading }}
+      value={{ user, token, login, register, logout, loading, forgotPassword, resetPassword }}
     >
       {children}
     </AuthContext.Provider>

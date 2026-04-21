@@ -13,6 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
 
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->validateCsrfTokens(except: [
+            'api/*',
+        ]);
+
         $middleware->alias([
             'admin'   => \App\Http\Middleware\IsAdmin::class,
             'mentor'  => \App\Http\Middleware\IsMentor::class,

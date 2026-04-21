@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Utilisateur;
+use App\Models\User;
 
 return [
 
@@ -9,16 +9,20 @@ return [
     ],
 
     'guards' => [
+        'web' => [
+            'driver'   => 'session',
+            'provider' => 'users',
+        ],
         'api' => [
             'driver'   => 'jwt',
-            'provider' => 'utilisateurs',
+            'provider' => 'users',
         ],
     ],
 
     'providers' => [
-        'utilisateurs' => [
+        'users' => [
             'driver' => 'eloquent',
-            'model'  => Utilisateur::class,
+            'model'  => User::class,
         ],
     ],
 
