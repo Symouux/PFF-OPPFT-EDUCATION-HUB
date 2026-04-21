@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import axios from "../api/axios";
 
 const AuthContext = createContext();
@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [loading, setLoading] = useState(true);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await axios.post("/logout");
     } catch (_) {}
@@ -16,19 +16,21 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
-  };
+  }, []);
 
   useEffect(() => {
     if (token) {
       axios
         .get("/me")
-        .then((res) => setUser(res.data))
+        .then((res) => {
+          setUser(res.data); // { user, profil }
+        })
         .catch(() => logout())
         .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
-  }, [token, logout]); 
+  }, [token, logout]);
 
   const login = async (email, password) => {
     const res = await axios.post("/login", {
@@ -36,35 +38,37 @@ export const AuthProvider = ({ children }) => {
       mot_de_passe: password,
     });
 
-    const { token, user } = res.data;
+    const { token, user, profil } = res.data;
 
     localStorage.setItem("token", token);
     setToken(token);
-    setUser(user);
 
-    return user;
+    setUser({ user, profil });
+
+    return { user, profil };
   };
 
   const register = async (
     nom_complet,
     email,
     mot_de_passe,
-    password_confirmation,
+    password_confirmation
   ) => {
     const res = await axios.post("/register", {
-      nom_complet: nom_complet,
-      email: email,
-      mot_de_passe: mot_de_passe,
-      password_confirmation: password_confirmation,
+      nom_complet,
+      email,
+      mot_de_passe,
+      password_confirmation,
     });
 
-    const { token, user } = res.data;
+    const { token, user, profil } = res.data;
 
     localStorage.setItem("token", token);
     setToken(token);
-    setUser(user);
 
-    return user;
+    setUser({ user, profil });
+
+    return { user, profil };
   };
 
   return (
