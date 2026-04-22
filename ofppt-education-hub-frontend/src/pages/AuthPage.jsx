@@ -13,8 +13,9 @@ export default function AuthPage() {
     email: localStorage.getItem("rememberedEmail") || "",
     password: "",
   });
+
   const [rememberMe, setRememberMe] = useState(
-    !!localStorage.getItem("rememberedEmail"),
+    !!localStorage.getItem("rememberedEmail")
   );
 
   const [registerData, setRegisterData] = useState({
@@ -30,7 +31,7 @@ export default function AuthPage() {
   const [pwStrength, setPwStrength] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Fonction de calcul de force
+  // 🔐 Password strength
   const getStrength = (pwd) => {
     if (!pwd) return 0;
     let score = 0;
@@ -48,39 +49,45 @@ export default function AuthPage() {
     { label: "Bon", color: "#3a7bd5" },
     { label: "Fort", color: "#1D9E75" },
   ];
-  // LOGIN
+
+  // ================= LOGIN =================
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginError("");
 
     try {
-      const user = await login(loginData.email, loginData.password);
+      const data = await login(loginData.email, loginData.password);
 
-      // Sauvegarde ou supprime l'email selon la case
+      const role = data.user?.role; // ✅ Correct path for role
+
+      // remember me
       if (rememberMe) {
         localStorage.setItem("rememberedEmail", loginData.email);
       } else {
         localStorage.removeItem("rememberedEmail");
       }
 
-      if (user.role === "admin") navigate("/admin");
-      else if (user.role === "mentor") navigate("/mentor");
+      // redirect حسب role
+      if (role === "admin") navigate("/admin");
+      else if (role === "mentor") navigate("/mentor");
       else navigate("/etudiant");
+
     } catch (err) {
       setLoginError(err.response?.data?.message || "Erreur login");
     }
   };
 
-  //register
+  // ================= REGISTER =================
   const handleRegister = async (e) => {
     e.preventDefault();
-    setRegisterError(""); // reset uniquement register
+    setRegisterError("");
+
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
     if (!passwordRegex.test(registerData.password)) {
       setRegisterError(
-        "Min 8 caractères, 1 majuscule, 1 chiffre, 1 caractère spécial (@$!%*?&)",
+        "Min 8 caractères, 1 majuscule, 1 chiffre, 1 caractère spécial"
       );
       return;
     }
@@ -97,7 +104,9 @@ export default function AuthPage() {
         registerData.password,
         registerData.password_confirmation,
       );
-      setIsActive(false);
+
+      setIsActive(false); // يرجع login
+
     } catch (err) {
       setRegisterError(err.response?.data?.message || "Erreur register");
     }
@@ -105,7 +114,8 @@ export default function AuthPage() {
 
   return (
     <div className={`container ${isActive ? "active" : ""}`}>
-      {/* SIGN UP */}
+
+      {/* ================= SIGN UP ================= */}
       <div className="form-container sign-up">
         <form onSubmit={handleRegister}>
           <h1>Créer un compte</h1>
@@ -115,7 +125,10 @@ export default function AuthPage() {
             type="text"
             placeholder="Nom complet"
             onChange={(e) =>
-              setRegisterData({ ...registerData, nom_complet: e.target.value })
+              setRegisterData({
+                ...registerData,
+                nom_complet: e.target.value,
+              })
             }
             required
           />
@@ -124,12 +137,15 @@ export default function AuthPage() {
             type="email"
             placeholder="Email"
             onChange={(e) =>
-              setRegisterData({ ...registerData, email: e.target.value })
+              setRegisterData({
+                ...registerData,
+                email: e.target.value,
+              })
             }
             required
           />
 
-          {/* Remplace l'input mot de passe dans sign-up */}
+          {/* password */}
           <div className="pw-wrapper">
             <div className="pw-input-row">
               <input
@@ -143,6 +159,7 @@ export default function AuthPage() {
                   setPwStrength(getStrength(e.target.value));
                 }}
               />
+
               <span
                 className="eye-toggle"
                 onClick={() => setShowPassword(!showPassword)}
@@ -151,12 +168,13 @@ export default function AuthPage() {
               </span>
             </div>
 
-            {/* Barre de force */}
+            {/* strength */}
             <div className="strength-bar-track">
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className={`strength-seg ${i <= pwStrength ? `level-${pwStrength}` : ""}`}
+                  className={`strength-seg ${i <= pwStrength ? `level-${pwStrength}` : ""
+                    }`}
                 />
               ))}
             </div>
@@ -186,7 +204,7 @@ export default function AuthPage() {
         </form>
       </div>
 
-      {/* SIGN IN */}
+      {/* ================= SIGN IN ================= */}
       <div className="form-container sign-in">
         <form onSubmit={handleLogin}>
           <h1>Connexion</h1>
@@ -195,10 +213,13 @@ export default function AuthPage() {
           <input
             type="email"
             placeholder="Email"
-            onChange={(e) =>
-              setLoginData({ ...loginData, email: e.target.value })
-            }
             value={loginData.email}
+            onChange={(e) =>
+              setLoginData({
+                ...loginData,
+                email: e.target.value,
+              })
+            }
             required
           />
 
@@ -206,10 +227,14 @@ export default function AuthPage() {
             type="password"
             placeholder="Mot de passe"
             onChange={(e) =>
-              setLoginData({ ...loginData, password: e.target.value })
+              setLoginData({
+                ...loginData,
+                password: e.target.value,
+              })
             }
             required
           />
+
           <div className="remember-me">
             <label>
               <input
@@ -220,6 +245,7 @@ export default function AuthPage() {
               Se souvenir de moi
             </label>
           </div>
+
           <p
             className="forgot-password"
             onClick={() => navigate("/forgot-password")}
@@ -231,21 +257,24 @@ export default function AuthPage() {
         </form>
       </div>
 
-      {/* OVERLAY */}
+      {/* ================= TOGGLE ================= */}
       <div className="toggle-container">
         <div className="toggle">
           <div className="toggle-panel toggle-left">
             <h1>Déjà inscrit ?</h1>
-            <button onClick={() => setIsActive(false)}>Se connecter</button>
+            <button onClick={() => setIsActive(false)}>
+              Se connecter
+            </button>
           </div>
 
           <div className="toggle-panel toggle-right">
-            <h1>Bonjour, ami !</h1>
+            <h1>Bonjour 👋</h1>
             <small>
-              Entrez vos informations personnelles et commencez l’aventure avec
-              nous
+              Entrez vos informations et commencez l’aventure
             </small>
-            <button onClick={() => setIsActive(true)}>S'inscrire</button>
+            <button onClick={() => setIsActive(true)}>
+              S'inscrire
+            </button>
           </div>
         </div>
       </div>

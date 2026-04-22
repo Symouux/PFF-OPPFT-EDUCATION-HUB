@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import axios from "../api/axios";
 
 const AuthContext = createContext();
@@ -8,27 +8,29 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [loading, setLoading] = useState(true);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await axios.post("/logout");
-    } catch (_) {}
+    } catch (_) { }
 
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
-  };
+  }, []);
 
   useEffect(() => {
     if (token) {
       axios
         .get("/me")
-        .then((res) => setUser(res.data))
+        .then((res) => {
+          setUser(res.data); // { user, profil }
+        })
         .catch(() => logout())
         .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
-  }, [token, logout]); 
+  }, [token, logout]);
 
   const login = async (email, password) => {
     const res = await axios.post("/login", {
@@ -36,13 +38,14 @@ export const AuthProvider = ({ children }) => {
       password: password,
     });
 
-    const { token, user } = res.data;
+    const { token, user, profil } = res.data;
 
     localStorage.setItem("token", token);
     setToken(token);
-    setUser(user);
 
-    return user;
+    setUser({ user, profil });
+
+    return { user, profil };
   };
 
   const register = async (
@@ -58,11 +61,12 @@ export const AuthProvider = ({ children }) => {
       password_confirmation: password_confirmation,
     });
 
-    const { token, user } = res.data;
+    const { token, user, profil } = res.data;
 
     localStorage.setItem("token", token);
     setToken(token);
-    setUser(user);
+
+    setUser({ user, profil });
 
     return user;
   };
