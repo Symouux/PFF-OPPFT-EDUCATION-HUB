@@ -1,3 +1,4 @@
+// ET-taheri khaoula
 import { useState } from "react";
 import "./AuthPage.css";
 import { useAuth } from "../context/AuthContext";
@@ -15,7 +16,7 @@ export default function AuthPage() {
   });
 
   const [rememberMe, setRememberMe] = useState(
-    !!localStorage.getItem("rememberedEmail")
+    !!localStorage.getItem("rememberedEmail"),
   );
 
   const [registerData, setRegisterData] = useState({
@@ -31,7 +32,7 @@ export default function AuthPage() {
   const [pwStrength, setPwStrength] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
 
-  // 🔐 Password strength
+  // Password strength
   const getStrength = (pwd) => {
     if (!pwd) return 0;
     let score = 0;
@@ -58,7 +59,7 @@ export default function AuthPage() {
     try {
       const data = await login(loginData.email, loginData.password);
 
-      const role = data.user?.role; // ✅ Correct path for role
+      const role = data.user?.role; // Correct path for role
 
       // remember me
       if (rememberMe) {
@@ -67,11 +68,10 @@ export default function AuthPage() {
         localStorage.removeItem("rememberedEmail");
       }
 
-      // redirect حسب role
+      // redirect par role
       if (role === "admin") navigate("/admin");
       else if (role === "mentor") navigate("/mentor");
       else navigate("/etudiant");
-
     } catch (err) {
       setLoginError(err.response?.data?.message || "Erreur login");
     }
@@ -87,7 +87,7 @@ export default function AuthPage() {
 
     if (!passwordRegex.test(registerData.password)) {
       setRegisterError(
-        "Min 8 caractères, 1 majuscule, 1 chiffre, 1 caractère spécial"
+        "Min 8 caractères, 1 majuscule, 1 chiffre, 1 caractère spécial",
       );
       return;
     }
@@ -105,8 +105,7 @@ export default function AuthPage() {
         registerData.password_confirmation,
       );
 
-      setIsActive(false); // يرجع login
-
+      setIsActive(false); // redirect login
     } catch (err) {
       setRegisterError(err.response?.data?.message || "Erreur register");
     }
@@ -114,7 +113,6 @@ export default function AuthPage() {
 
   return (
     <div className={`container ${isActive ? "active" : ""}`}>
-
       {/* ================= SIGN UP ================= */}
       <div className="form-container sign-up">
         <form onSubmit={handleRegister}>
@@ -173,8 +171,9 @@ export default function AuthPage() {
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className={`strength-seg ${i <= pwStrength ? `level-${pwStrength}` : ""
-                    }`}
+                  className={`strength-seg ${
+                    i <= pwStrength ? `level-${pwStrength}` : ""
+                  }`}
                 />
               ))}
             </div>
@@ -262,19 +261,13 @@ export default function AuthPage() {
         <div className="toggle">
           <div className="toggle-panel toggle-left">
             <h1>Déjà inscrit ?</h1>
-            <button onClick={() => setIsActive(false)}>
-              Se connecter
-            </button>
+            <button onClick={() => setIsActive(false)}>Se connecter</button>
           </div>
 
           <div className="toggle-panel toggle-right">
             <h1>Bonjour 👋</h1>
-            <small>
-              Entrez vos informations et commencez l’aventure
-            </small>
-            <button onClick={() => setIsActive(true)}>
-              S'inscrire
-            </button>
+            <small>Entrez vos informations et commencez l’aventure</small>
+            <button onClick={() => setIsActive(true)}>S'inscrire</button>
           </div>
         </div>
       </div>
