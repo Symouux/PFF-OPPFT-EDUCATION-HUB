@@ -16,14 +16,12 @@ Route::post('/login',    [AuthController::class, 'login']);
 Route::middleware('auth:api')->group(function () {
 
     Route::get('/me',       [AuthController::class, 'me']);
-    Route::post('/logout',  [AuthController::class, 'logout']); 
+    Route::post('/logout',  [AuthController::class, 'logout']);
 
     // Admin
-    Route::middleware('admin')->group(function () {
-        Route::get('/admin/test', function () {
-            return response()->json(['message' => 'Welcome Admin!']);
-        });
-    });
+    Route::middleware('admin')
+        ->prefix('admin')
+        ->group(base_path('routes/api/Admin.php'));
 
     // Mentor
     Route::middleware('mentor')->group(function () {
