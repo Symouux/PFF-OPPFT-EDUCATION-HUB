@@ -1,0 +1,294 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* COLORS */
+:root {
+  --primary: #1f4e79;
+  --secondary: #3a7bd5;
+  --bg: #f5f7fb;
+  --text: #2d2d2d;
+  --muted: #6c757d;
+  --card: #ffffff;
+}
+
+/* BODY */
+body {
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* CONTAINER */
+.container {
+  background: var(--card);
+  border-radius: 15px;
+  width: 768px;
+  max-width: 100%;
+  min-height: 480px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* FORMS */
+.form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transition: all 0.6s ease-in-out;
+}
+
+/* SIGN IN */
+.sign-in {
+  left: 0;
+  z-index: 2;
+}
+
+/* SIGN UP */
+.sign-up {
+  left: 0;
+  opacity: 0;
+  z-index: 1;
+}
+
+/* ACTIVE STATE */
+.container.active .sign-in {
+  transform: translateX(100%);
+}
+
+.container.active .sign-up {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+}
+
+/* FORM STYLE */
+form {
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  padding: 0 50px;
+  height: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+form h1 {
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+/* INPUT */
+input {
+  background: #f1f3f6;
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  outline: none;
+}
+
+/* BUTTON */
+button {
+  border: none;
+  padding: 12px;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: var(--secondary);
+}
+
+/* ERROR */
+p {
+  color: var(--muted);
+}
+
+/* OVERLAY */
+.toggle-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: all 0.6s ease-in-out;
+}
+
+.container.active .toggle-container {
+  transform: translateX(-100%);
+}
+
+.toggle {
+  background: linear-gradient(to right, #1f4e79, #3a7bd5);
+  color: #fff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: all 0.6s ease-in-out;
+}
+
+.container.active .toggle {
+  transform: translateX(50%);
+}
+
+/* PANELS */
+.toggle-panel {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  text-align: center;
+  padding: 0 40px;
+}
+
+.toggle-left {
+  transform: translateX(-200%);
+}
+
+.container.active .toggle-left {
+  transform: translateX(0);
+}
+
+.toggle-right {
+  right: 0;
+}
+
+/* TEXT */
+.toggle-panel h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.toggle-panel small {
+  font-size: 14px;
+  line-height: 20px;
+  max-width: 250px;
+  margin: 10px 0;
+  color: #e0e0e0;
+}
+
+/* OVERLAY BUTTON */
+.toggle-panel button {
+  border-radius: 20px;
+  border: 1px solid #fff;
+  background: transparent;
+  padding: 10px 30px;
+}
+.error {
+  color: red;
+  font-size: 12px;
+  text-align: left;
+  margin-top: -5px;
+  margin-bottom: 5px;
+}
+
+.forgot-password {
+  font-size: 13px;
+  color: var(--secondary);
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+.pw-wrapper {
+  width: 100%;
+}
+
+.pw-input-row {
+  position: relative;
+}
+
+.pw-input-row input {
+  width: 100%;
+}
+
+.eye-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.strength-bar-track {
+  display: flex;
+  gap: 5px;
+  margin-top: 6px;
+  height: 4px;
+}
+
+.strength-seg {
+  flex: 1;
+  border-radius: 2px;
+  background: #ddd;
+  transition: background 0.3s;
+}
+
+.strength-seg.level-1 {
+  background: #e24b4a;
+}
+.strength-seg.level-2 {
+  background: #ef9f27;
+}
+.strength-seg.level-3 {
+  background: #3a7bd5;
+}
+.strength-seg.level-4 {
+  background: #1d9e75;
+}
+
+.strength-label {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 3px;
+  display: block;
+  text-align: left;
+}
+.remember-me {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  margin: 4px 0;
+}
+
+.remember-me label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--primary);
+  cursor: pointer;
+  margin: 0;
+}
