@@ -121,7 +121,7 @@ class AdminController extends Controller
 
 
 
-    /**********gestion des votes  ********/
+    /**********statistique   ********/
 
     // 1) voir static du vote par projet
     public function getVoteStats()
@@ -152,6 +152,7 @@ class AdminController extends Controller
 
         // On supprime tous les votes liés à ce projet
         Vote::where('project_id', $id)->delete();
+        $project->update(['nb_votes' => 0]);
 
         return response()->json([
             'message' => 'Votes réinitialisés avec succès pour ce projet'
@@ -163,8 +164,7 @@ class AdminController extends Controller
     // 1) voir toute les ressource partager
     public function getAllResources()
     {
-        $resources = Resource::with('User')
-            ->orderBy('date_ajoute', 'desc')
+        $resources = Resource::with('user')->orderBy('date_ajout', 'desc')
             ->paginate(10);
 
         return response()->json([

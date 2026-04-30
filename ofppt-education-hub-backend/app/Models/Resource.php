@@ -8,16 +8,16 @@ class Resource extends Model
 {
     public $timestamps = false;
     protected $fillable = [
-        'mentor_id',
+        'utilisateur_id',
         'titre',
         'type',
         'url_fichier',
         'date_ajout',
     ];
 
-    // Une ressource appartient à un mentor (user)
-    public function mentor()
+    // Une ressource appartient à un user( mentor ou student)
+    public function user()
     {
-        return $this->belongsTo(User::class, 'mentor_id');
+        return $this->belongsTo(User::class, 'utilisateur_id');
     }
 }
