@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from "../../api/axios";
-import { Trash2, Archive, ExternalLink, Search, Loader2, Award, Filter } from 'lucide-react';
+import { Trash2, Archive, Search, Loader2, Filter } from 'lucide-react';
 import './ProjectsList.css';
 
 const ProjectsPage = () => {
@@ -14,7 +14,13 @@ const ProjectsPage = () => {
         try {
             setLoading(true);
             const response = await axios.get('/admin/projects');
-            const actualData = response.data?.data?.data || [];
+            
+            // Debugging
+            console.log("Response data:", response.data);
+
+            // التعامل مع Laravel Pagination
+            const actualData = response.data?.data?.data || response.data?.data || [];
+            
             setProjects(actualData);
             setFilteredProjects(actualData);
         } catch (error) {
@@ -25,19 +31,24 @@ const ProjectsPage = () => {
         }
     };
 
-    useEffect(() => { fetchProjects(); }, []);
+    useEffect(() => {
+        fetchProjects();
+    }, []);
 
     useEffect(() => {
-        let result = Array.isArray(projects) ? [...projects] : [];
+        if (!Array.isArray(projects)) return;
+
+        let result = [...projects];
         
         if (statusFilter !== 'all') {
             result = result.filter(p => p.status?.toLowerCase() === statusFilter.toLowerCase());
         }
 
         if (searchTerm) {
+            const term = searchTerm.toLowerCase();
             result = result.filter(p => 
-                p.titre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                p.student?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+                (p.titre && p.titre.toLowerCase().includes(term)) ||
+                (p.user?.name && p.user.name.toLowerCase().includes(term))
             );
         }
         setFilteredProjects(result);
@@ -61,7 +72,11 @@ const ProjectsPage = () => {
         }
     };
 
-    if (loading) return <div className="loader-container"><Loader2 className="animate-spin" size={40} /></div>;
+    if (loading) return (
+        <div className="loader-container">
+            <Loader2 className="animate-spin" size={40} color="#c9a84c" />
+        </div>
+    );
 
     return (
         <div className="projects-page">
@@ -81,7 +96,6 @@ const ProjectsPage = () => {
                         <Filter size={18} />
                         <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
                             <option value="all">Tous les statuts</option>
-                            {/* <option value="pending">En attente</option> */}
                             <option value="active">Actif</option>
                             <option value="archived">Archivé</option>
                         </select>
@@ -97,50 +111,47 @@ const ProjectsPage = () => {
                             <th>Étudiant</th>
                             <th>Votes</th>
                             <th>Status</th>
-                            {/* <th>Winner</th> */}
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredProjects.map((project) => (
-                            <tr key={project.id}>
-                                <td className="project-title-cell">
-                                    {project.titre}
-                                </td>
-
-                                <td className="student-name">
-                                    {project.student ? project.student.name : 'Utilisateur inconnu'}
-                                </td>
-
-                                <td>
-                                    <span className="vote-count">{project.nb_votes || 0}</span>
-                                </td>
-
-                                <td>
-                                    <span className={`status-badge ${project.status}`}>
-                                        {project.status}
-                                    </span>
-                                </td>
-
-                                {/* <td>
-                                    {project.estGagantMois ? <Award className="icon-winner" size={20} /> : "-"}
-                                </td> */}
-
-                                <td className="action-buttons">
-                                    <button onClick={() => handleArchive(project.id)} title="Archiver">
-                                        <Archive size={20} className="icon-archive" />
-                                    </button>
-                                    <button onClick={() => handleDelete(project.id)} title="Supprimer">
-                                        <Trash2 size={20} className="icon-danger" />
-                                    </button>
+                        {filteredProjects.length > 0 ? (
+                            filteredProjects.map((project) => (
+                                <tr key={project.id}>
+                                    <td className="project-title-cell">{project.titre}</td>
+                                    <td className="student-name">
+                                        {project.user?.name || 'Utilisateur inconnu'}
+                                    </td>
+                                    <td>
+                                        <span className="vote-count">{project.nb_votes || 0}</span>
+                                    </td>
+                                    <td>
+                                        <span className={`status-badge ${project.status}`}>
+                                            {project.status}
+                                        </span>
+                                    </td>
+                                    <td className="action-buttons">
+                                        <button onClick={() => handleArchive(project.id)} title="Archiver">
+                                            <Archive size={20} className="icon-archive" />
+                                        </button>
+                                        <button onClick={() => handleDelete(project.id)} title="Supprimer">
+                                            <Trash2 size={20} className="icon-danger" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+                                    Aucun projet trouvé.
                                 </td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>
         </div>
     );
-};
+}; // <--- هاد القوس كان ناقص!
 
 export default ProjectsPage;
