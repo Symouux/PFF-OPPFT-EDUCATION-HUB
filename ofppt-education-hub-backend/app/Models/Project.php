@@ -12,7 +12,7 @@ class Project extends Model
     public $timestamps = false;
     // On liste exactement les colonnes de ta migration
     protected $fillable = [
-        'student_id',
+        'utilisateur_id',
         'titre',
         'description',
         'technologies',
@@ -29,10 +29,10 @@ class Project extends Model
         'date_publication' => 'datetime',
     ];
 
-    // Un projet appartient à un étudiant
-    public function student()
+    // Un projet appartient aà un étudiant
+    public function user()
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class, 'utilisateur_id');
     }
 
     // Un projet peut avoir plusieurs votes

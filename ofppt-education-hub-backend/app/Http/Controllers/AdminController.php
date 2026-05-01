@@ -72,7 +72,7 @@ class AdminController extends Controller
     public function getAllProjects()
     {
         // On charge aussi l'étudiant qui a publié chaque projet
-        $projects = Project::with('student')
+        $projects = Project::with('user')
             ->orderBy('date_publication', 'desc')
             ->paginate(10);
 
@@ -164,7 +164,8 @@ class AdminController extends Controller
     // 1) voir toute les ressource partager
     public function getAllResources()
     {
-        $resources = Resource::with('user')->orderBy('date_ajout', 'desc')
+        $resources = Resource::with('user')
+            ->orderBy('date_ajout', 'desc')
             ->paginate(10);
 
         return response()->json([
@@ -203,7 +204,7 @@ class AdminController extends Controller
                 'total_users'    => User::count(),
 
                 // Juste les étudiants
-                'total_students' => User::where('role', 'student')->count(),
+                'total_students' => User::where('role', 'etudiant')->count(),
 
                 // Juste les mentors
                 'total_mentors'  => User::where('role', 'mentor')->count(),

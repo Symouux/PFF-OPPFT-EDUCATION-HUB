@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +13,7 @@ return new class extends Migration
             $table->id();
 
             // L'étudiant qui a publié ce projet
-            $table->foreignId('student_id')
+            $table->foreignId('utilisateur_id')
                 ->constrained('users')
                 ->onDelete('cascade');
 
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->integer('nb_votes')->default(0);
 
             $table->timestamp('date_publication')->nullable();
-           
+
         });
     }
 

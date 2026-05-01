@@ -15,7 +15,7 @@ class Resource extends Model
         'date_ajout',
     ];
 
-    // Une ressource appartient à un user( mentor ou student)
+    // Une ressource appartient à un mentor (user)
     public function user()
     {
         return $this->belongsTo(User::class, 'utilisateur_id');
