@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\PreviewController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -16,14 +19,12 @@ Route::post('/login',    [AuthController::class, 'login']);
 Route::middleware('auth:api')->group(function () {
 
     Route::get('/me',       [AuthController::class, 'me']);
-    Route::post('/logout',  [AuthController::class, 'logout']); 
+    Route::post('/logout',  [AuthController::class, 'logout']);
 
     // Admin
-    Route::middleware('admin')->group(function () {
-        Route::get('/admin/test', function () {
-            return response()->json(['message' => 'Welcome Admin!']);
-        });
-    });
+    Route::middleware('admin')
+        ->prefix('admin')
+        ->group(base_path('routes/api/Admin.php'));
 
     // Mentor
     Route::middleware('mentor')->group(function () {
@@ -37,5 +38,13 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/student/test', function () {
             return response()->json(['message' => 'Welcome Student!']);
         });
+    });
+
+    Route::middleware('publisher')->group(function(){
+        Route::post('/previews/github', [PreviewController::class, 'github']);
+        Route::post('/previews/drive', [PreviewController::class, 'drive']);
+
+        Route::post('/projects', [ProjectController::class, 'store']);
+        Route::post('/resources', [ResourceController::class, 'store']);
     });
 });
