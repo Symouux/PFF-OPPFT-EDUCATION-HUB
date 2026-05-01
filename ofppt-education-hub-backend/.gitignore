@@ -28,3 +28,5 @@ Thumbs.db
 /vendor
 .env
 /storage/*.key
+
+

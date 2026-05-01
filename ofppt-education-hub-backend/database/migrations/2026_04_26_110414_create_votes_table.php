@@ -11,21 +11,17 @@ return new class extends Migration
         Schema::create('votes', function (Blueprint $table) {
             $table->id();
 
-            // Quel étudiant a voté
-            $table->foreignId('utilisateur_id')
-                  ->constrained('users')
-                  ->onDelete('cascade');
+            $table->foreignId('student_id')
+                ->constrained('users')
+                ->onDelete('cascade');
 
-            // Pour quel projet
             $table->foreignId('project_id')
-                  ->constrained('projects')
-                  ->onDelete('cascade');
+                ->constrained('projects')
+                ->onDelete('cascade');
 
-            $table->timestamp('date_vote')->nullable();
-            
+            $table->date('date_vote');
 
-            // Un user peut voter une seule fois par projet
-            $table->unique(['utilisateur_id', 'project_id']);
+            $table->unique(['student_id', 'project_id']);
         });
     }
 
