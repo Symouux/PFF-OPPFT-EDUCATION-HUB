@@ -16,7 +16,7 @@ class UserFactory extends Factory
 
             'role' => fake()->randomElement([
                 'admin',
-                'student',
+                'etudiant',
                 'mentor'
             ]),
 
