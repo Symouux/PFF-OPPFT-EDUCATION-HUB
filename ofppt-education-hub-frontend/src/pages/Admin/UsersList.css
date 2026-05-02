@@ -1,5 +1,5 @@
-:root {
-    --primary: #c9a84c; /* اللون الذهبي ديالك */
+.users-page {
+    --primary: #c9a84c;
     --navy: #0f2442;
     --bg-light: #f8fafc;
     --border: #e2e8f0;
@@ -9,9 +9,7 @@
     --danger: #ef4444;
     --success: #22c55e;
     --warning: #f59e0b;
-}
 
-.users-page {
     padding: 40px;
     background-color: var(--bg-light);
     min-height: 100vh;
