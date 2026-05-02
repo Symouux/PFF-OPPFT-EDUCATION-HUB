@@ -11,7 +11,7 @@ class VoteFactory extends Factory
     public function definition(): array
     {
         return [
-            'student_id' => User::where('role', 'student')->inRandomOrder()->first()->id,
+            'utilisateur_id' => User::where('role', 'etudiant')->inRandomOrder()->first()->id,
             'project_id' => Project::inRandomOrder()->first()->id,
             'date_vote'  => now(),
         ];

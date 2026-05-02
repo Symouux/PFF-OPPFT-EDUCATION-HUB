@@ -35,8 +35,8 @@ class DatabaseSeeder extends Seeder
 
         foreach ($users as $user) {
 
-            // student
-            if ($user->role === 'student') {
+            // etudiant
+            if ($user->role === 'etudiant') {
 
                 Profil::factory()->create([
                     'user_id' => $user->id,
@@ -95,7 +95,7 @@ class DatabaseSeeder extends Seeder
 
             // utilisateurs qui peuvent voter (pas le propriétaire)
             $voters = User::where('id', '!=', $project->utilisateur_id)
-                ->where('role', 'student')
+                ->where('role', 'etudiant')
                 ->inRandomOrder()
                 ->take(rand(1, 10))
                 ->get();
