@@ -35,8 +35,8 @@ class DatabaseSeeder extends Seeder
 
         foreach ($users as $user) {
 
-            // student
-            if ($user->role === 'student') {
+            // etudiant
+            if ($user->role === 'etudiant') {
 
                 Profil::factory()->create([
                     'user_id' => $user->id,
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
                 ]);
 
                 Project::factory(rand(1, 3))->create([
-                    'student_id' => $user->id
+                    'utilisateur_id' => $user->id
                 ]);
             }
 
@@ -94,8 +94,8 @@ class DatabaseSeeder extends Seeder
         foreach ($projects as $project) {
 
             // utilisateurs qui peuvent voter (pas le propriétaire)
-            $voters = User::where('id', '!=', $project->student_id)
-                ->where('role', 'student')
+            $voters = User::where('id', '!=', $project->utilisateur_id)
+                ->where('role', 'etudiant')
                 ->inRandomOrder()
                 ->take(rand(1, 10))
                 ->get();
@@ -103,13 +103,13 @@ class DatabaseSeeder extends Seeder
             foreach ($voters as $voter) {
 
                 // éviter double vote
-                $alreadyVoted = Vote::where('student_id', $voter->id)
+                $alreadyVoted = Vote::where('utilisateur_id', $voter->id)
                     ->where('project_id', $project->id)
                     ->exists();
 
                 if (!$alreadyVoted) {
                     Vote::create([
-                        'student_id' => $voter->id,
+                        'utilisateur_id' => $voter->id,
                         'project_id' => $project->id,
                         'date_vote'  => now(),
                     ]);

@@ -84,17 +84,17 @@ class User extends Authenticatable implements JWTSubject
     // relation One To Many un etudiant peux publier plusieurs projets
     public function projects()
     {
-        return $this->hasMany(Project::class, 'student_id');
+        return $this->hasMany(Project::class, 'utilisateur_id');
     }
 
     //un etudiant peut voter plusieurs fois pour differente projet
     public function votes()
     {
-        if ($this->role !== 'student') {
+        if ($this->role !== 'etudiant') {
             return null;
         }
 
-        return $this->hasMany(Vote::class, 'student_id');
+        return $this->hasMany(Vote::class, 'utilisateur_id');
     }
 
     //un user(etudiant mentore) peut ajouter des ressource
