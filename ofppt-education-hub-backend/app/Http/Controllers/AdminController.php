@@ -204,7 +204,7 @@ class AdminController extends Controller
                 'total_users'    => User::count(),
 
                 // Juste les étudiants
-                'total_students' => User::where('role', 'student')->count(),
+                'total_students' => User::where('role', 'etudiant')->count(),
 
                 // Juste les mentors
                 'total_mentors'  => User::where('role', 'mentor')->count(),
