@@ -22,7 +22,7 @@ return new class extends Migration
                   ->onDelete('cascade');
 
             $table->timestamp('date_vote')->nullable();
-            
+
 
             // Un user peut voter une seule fois par projet
             $table->unique(['utilisateur_id', 'project_id']);

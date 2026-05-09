@@ -37,4 +37,9 @@ class Project extends Model
     {
         return $this->hasMany(Vote::class);
     }
+
+    public function categories()
+    {
+        return $this->belongsTo(Categorie::class, 'category_id');
+    }
 }
