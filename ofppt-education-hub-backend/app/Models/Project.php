@@ -45,4 +45,12 @@ class Project extends Model
     {
         return $this->belongsTo(Categorie::class, 'category_id');
     }
+
+    public function mentorReviews() {
+        return $this->hasMany(MentorReview::class, 'project_id');
+    }
+
+    public function mentorRequests() {
+        return $this->hasMany(ProjectMentorRequest::class, 'project_id');
+    }
 }
