@@ -15,7 +15,7 @@ class MentorProfile extends Model
         'is_available',
     ];
 
-    
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'mentor_id');
@@ -23,6 +23,6 @@ class MentorProfile extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Categorie::class);
+        return $this->belongsTo(Categorie::class, 'category_id');
     }
 }

@@ -11,10 +11,10 @@ class Categorie extends Model
     ];
 
     public function projects() {
-        return $this->hasMany(Project::class);
+        return $this->hasMany(Project::class, 'category_id');
     }
 
     public function mentorProfiles() {
-        return $this->hasMany(MentorProfile::class);
+        return $this->hasMany(MentorProfile::class, 'category_id');
     }
 }
