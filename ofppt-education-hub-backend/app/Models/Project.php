@@ -40,4 +40,9 @@ class Project extends Model
     {
         return $this->hasMany(Vote::class, 'project_id');
     }
+
+    public function categories()
+    {
+        return $this->belongsTo(Categorie::class, 'category_id');
+    }
 }
