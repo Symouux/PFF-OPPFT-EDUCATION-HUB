@@ -80,4 +80,26 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(Profil::class, 'user_id');
     }
+
+    // relation One To Many un etudiant peux publier plusieurs projets
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'utilisateur_id');
+    }
+
+    //un etudiant peut voter plusieurs fois pour differente projet
+    public function votes()
+    {
+        if ($this->role !== 'etudiant') {
+            return null;
+        }
+
+        return $this->hasMany(Vote::class, 'utilisateur_id');
+    }
+
+    //un user(etudiant mentore) peut ajouter des ressource
+    public function resources()
+    {
+        return $this->hasMany(Resource::class, 'utilisateur_id');
+    }
 }

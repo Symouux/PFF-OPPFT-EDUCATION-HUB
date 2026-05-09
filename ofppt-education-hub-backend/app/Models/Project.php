@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Project extends Model
 {
+    use HasFactory;
+
     public $timestamps = false;
     // On liste exactement les colonnes de ta migration
     protected $fillable = [
@@ -35,7 +38,7 @@ class Project extends Model
     // Un projet peut avoir plusieurs votes
     public function votes()
     {
-        return $this->hasMany(Vote::class);
+        return $this->hasMany(Vote::class, 'project_id');
     }
 
     public function categories()
