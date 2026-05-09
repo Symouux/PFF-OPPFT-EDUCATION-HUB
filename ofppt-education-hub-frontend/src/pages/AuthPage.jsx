@@ -112,162 +112,164 @@ export default function AuthPage() {
   };
 
   return (
-    <div className={`container ${isActive ? "active" : ""}`}>
-      {/* ================= SIGN UP ================= */}
-      <div className="form-container sign-up">
-        <form onSubmit={handleRegister}>
-          <h1>Créer un compte</h1>
-          {registerError && <p className="error">{registerError}</p>}
+    <div className="auth-page">
+      <div className={`container ${isActive ? "active" : ""}`}>
+        {/* ================= SIGN UP ================= */}
+        <div className="form-container sign-up">
+          <form onSubmit={handleRegister}>
+            <h1>Créer un compte</h1>
+            {registerError && <p className="error">{registerError}</p>}
 
-          <input
-            type="text"
-            placeholder="Nom complet"
-            onChange={(e) =>
-              setRegisterData({
-                ...registerData,
-                nom_complet: e.target.value,
-              })
-            }
-            required
-          />
+            <input
+              type="text"
+              placeholder="Nom complet"
+              onChange={(e) =>
+                setRegisterData({
+                  ...registerData,
+                  nom_complet: e.target.value,
+                })
+              }
+              required
+            />
 
-          <input
-            type="email"
-            placeholder="Email"
-            onChange={(e) =>
-              setRegisterData({
-                ...registerData,
-                email: e.target.value,
-              })
-            }
-            required
-          />
+            <input
+              type="email"
+              placeholder="Email"
+              onChange={(e) =>
+                setRegisterData({
+                  ...registerData,
+                  email: e.target.value,
+                })
+              }
+              required
+            />
 
-          {/* password */}
-          <div className="pw-wrapper">
-            <div className="pw-input-row">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Mot de passe"
-                onChange={(e) => {
-                  setRegisterData({
-                    ...registerData,
-                    password: e.target.value,
-                  });
-                  setPwStrength(getStrength(e.target.value));
-                }}
-              />
-
-              <span
-                className="eye-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? "🙈" : "👁"}
-              </span>
-            </div>
-
-            {/* strength */}
-            <div className="strength-bar-track">
-              {[1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className={`strength-seg ${
-                    i <= pwStrength ? `level-${pwStrength}` : ""
-                  }`}
+            {/* password */}
+            <div className="pw-wrapper">
+              <div className="pw-input-row">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Mot de passe"
+                  onChange={(e) => {
+                    setRegisterData({
+                      ...registerData,
+                      password: e.target.value,
+                    });
+                    setPwStrength(getStrength(e.target.value));
+                  }}
                 />
-              ))}
+
+                <span
+                  className="eye-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "🙈" : "👁"}
+                </span>
+              </div>
+
+              {/* strength */}
+              <div className="strength-bar-track">
+                {[1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className={`strength-seg ${
+                      i <= pwStrength ? `level-${pwStrength}` : ""
+                    }`}
+                  />
+                ))}
+              </div>
+              {registerData.password && (
+                <span
+                  className="strength-label"
+                  style={{ color: strengthConfig[pwStrength].color }}
+                >
+                  {strengthConfig[pwStrength].label}
+                </span>
+              )}
             </div>
-            {registerData.password && (
-              <span
-                className="strength-label"
-                style={{ color: strengthConfig[pwStrength].color }}
-              >
-                {strengthConfig[pwStrength].label}
-              </span>
-            )}
-          </div>
 
-          <input
-            type="password"
-            placeholder="Confirmer mot de passe"
-            onChange={(e) =>
-              setRegisterData({
-                ...registerData,
-                password_confirmation: e.target.value,
-              })
-            }
-            required
-          />
+            <input
+              type="password"
+              placeholder="Confirmer mot de passe"
+              onChange={(e) =>
+                setRegisterData({
+                  ...registerData,
+                  password_confirmation: e.target.value,
+                })
+              }
+              required
+            />
 
-          <button type="submit">S'inscrire</button>
-        </form>
-      </div>
+            <button type="submit">S'inscrire</button>
+          </form>
+        </div>
 
-      {/* ================= SIGN IN ================= */}
-      <div className="form-container sign-in">
-        <form onSubmit={handleLogin}>
-          <h1>Connexion</h1>
-          {loginError && <p className="error">{loginError}</p>}
+        {/* ================= SIGN IN ================= */}
+        <div className="form-container sign-in">
+          <form onSubmit={handleLogin}>
+            <h1>Connexion</h1>
+            {loginError && <p className="error">{loginError}</p>}
 
-          <input
-            type="email"
-            placeholder="Email"
-            value={loginData.email}
-            onChange={(e) =>
-              setLoginData({
-                ...loginData,
-                email: e.target.value,
-              })
-            }
-            required
-          />
+            <input
+              type="email"
+              placeholder="Email"
+              value={loginData.email}
+              onChange={(e) =>
+                setLoginData({
+                  ...loginData,
+                  email: e.target.value,
+                })
+              }
+              required
+            />
 
-          <input
-            type="password"
-            placeholder="Mot de passe"
-            onChange={(e) =>
-              setLoginData({
-                ...loginData,
-                password: e.target.value,
-              })
-            }
-            required
-          />
+            <input
+              type="password"
+              placeholder="Mot de passe"
+              onChange={(e) =>
+                setLoginData({
+                  ...loginData,
+                  password: e.target.value,
+                })
+              }
+              required
+            />
 
-          <div className="remember-me">
-            <label>
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-              />
-              Se souvenir de moi
-            </label>
-          </div>
+            <div className="remember-me">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                Se souvenir de moi
+              </label>
+            </div>
 
-          <p
-            className="forgot-password"
-            onClick={() => navigate("/forgot-password")}
-          >
-            Mot de passe oublié ?
-          </p>
+            <p
+              className="forgot-password"
+              onClick={() => navigate("/forgot-password")}
+            >
+              Mot de passe oublié ?
+            </p>
 
-          <button type="submit">Se connecter</button>
-        </form>
-      </div>
+            <button type="submit">Se connecter</button>
+          </form>
+        </div>
 
-      {/* ================= TOGGLE ================= */}
-      <div className="toggle-container">
-        <div className="toggle">
-          <div className="toggle-panel toggle-left">
-            <h1>Déjà inscrit ?</h1>
-            <button onClick={() => setIsActive(false)}>Se connecter</button>
-          </div>
+        {/* ================= TOGGLE ================= */}
+        <div className="toggle-container">
+          <div className="toggle">
+            <div className="toggle-panel toggle-left">
+              <h1>Déjà inscrit ?</h1>
+              <button onClick={() => setIsActive(false)}>Se connecter</button>
+            </div>
 
-          <div className="toggle-panel toggle-right">
-            <h1>Bonjour 👋</h1>
-            <small>Entrez vos informations et commencez l’aventure</small>
-            <button onClick={() => setIsActive(true)}>S'inscrire</button>
+            <div className="toggle-panel toggle-right">
+              <h1>Bonjour 👋</h1>
+              <small>Entrez vos informations et commencez l’aventure</small>
+              <button onClick={() => setIsActive(true)}>S'inscrire</button>
+            </div>
           </div>
         </div>
       </div>

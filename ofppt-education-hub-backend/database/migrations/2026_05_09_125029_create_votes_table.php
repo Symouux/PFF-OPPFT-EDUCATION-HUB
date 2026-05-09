@@ -18,8 +18,7 @@ return new class extends Migration
             $table->foreignId('project_id')
                 ->constrained('projects')
                 ->onDelete('cascade');
-
-            $table->date('date_vote');
+                $table->date('date_vote');
 
             $table->unique(['utilisateur_id', 'project_id']);
         });

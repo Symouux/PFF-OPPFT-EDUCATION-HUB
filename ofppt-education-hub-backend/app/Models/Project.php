@@ -13,6 +13,7 @@ class Project extends Model
     // On liste exactement les colonnes de ta migration
     protected $fillable = [
         'utilisateur_id',
+        'category_id',
         'titre',
         'description',
         'technologies',
@@ -39,5 +40,18 @@ class Project extends Model
     public function votes()
     {
         return $this->hasMany(Vote::class, 'project_id');
+    }
+
+    public function categories()
+    {
+        return $this->belongsTo(Categorie::class, 'category_id');
+    }
+
+    public function mentorReviews() {
+        return $this->hasMany(MentorReview::class, 'project_id');
+    }
+
+    public function mentorRequests() {
+        return $this->hasMany(ProjectMentorRequest::class, 'project_id');
     }
 }

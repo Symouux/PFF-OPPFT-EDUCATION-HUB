@@ -74,7 +74,7 @@ class AdminController extends Controller
         // On charge aussi l'étudiant qui a publié chaque projet
         $projects = Project::with('user')
             ->orderBy('date_publication', 'desc')
-            ->paginate(10);
+            ->get();
 
         return response()->json([
             'message' => 'Liste des projets récupérée avec succès',
