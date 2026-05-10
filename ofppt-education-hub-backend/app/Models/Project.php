@@ -13,6 +13,7 @@ class Project extends Model
     // On liste exactement les colonnes de ta migration
     protected $fillable = [
         'utilisateur_id',
+        'category_id',
         'titre',
         'description',
         'technologies',

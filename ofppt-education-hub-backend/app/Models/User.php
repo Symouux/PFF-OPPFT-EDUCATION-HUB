@@ -109,6 +109,19 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
+    public function mentorReviews()
+    {
+        return $this->hasMany(MentorReview::class, 'mentor_id');
+    }
+
+    public function mentorRequestStudent() {
+        return $this->hasMany(ProjectMentorRequest::class, 'etudiant_id');
+    }
+
+    public function mentorRequestMentor() {
+        return $this->hasMany(ProjectMentorRequest::class, 'mentor_id');
+    }
+
     // Conversations started by this user
     public function conversationsAsFirstUser() {
         return $this->hasMany(Conversation::class, 'user_one');
@@ -122,17 +135,5 @@ class User extends Authenticatable implements JWTSubject
     // Messages sent by this user
     public function messages() {
         return $this->hasMany(Message::class, 'sender_id');
-    }
-    public function mentorReviews()
-    {
-        return $this->hasMany(MentorReview::class, 'mentor_id');
-    }
-
-    public function mentorRequestStudent() {
-        return $this->hasMany(ProjectMentorRequest::class, 'etudiant_id');
-    }
-
-    public function mentorRequestMentor() {
-        return $this->hasMany(ProjectMentorRequest::class, 'mentor_id');
     }
 }
