@@ -5,6 +5,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Mentor\MentorRequestController;
 
 //  Route de test public
 Route::get('/ping', function () {
@@ -26,12 +27,6 @@ Route::middleware('auth:api')->group(function () {
         ->prefix('admin')
         ->group(base_path('routes/api/Admin.php'));
 
-    // Mentor
-    Route::middleware('mentor')->group(function () {
-        Route::get('/mentor/test', function () {
-            return response()->json(['message' => 'Welcome Mentor!']);
-        });
-    });
 
     // Etudiant
     Route::middleware('etudiant')->group(function () {
@@ -47,4 +42,21 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/projects', [ProjectController::class, 'store']);
         Route::post('/resources', [ResourceController::class, 'store']);
     });
+
+
+
+
+    // Mentor
+    Route::middleware('mentor')->group(function () {
+
+        // Mentor Requests
+
+        Route::get('/mentor/requests', [MentorRequestController::class, 'index']);
+
+        Route::put('/mentor/request/{id}/accept', [MentorRequestController::class, 'accept']);
+
+        Route::put('/mentor/request/{id}/reject', [MentorRequestController::class, 'reject']);
+
+        Route::get('/mentor/accepted-projects', [MentorRequestController::class, 'acceptedProjects']);
+});
 });
