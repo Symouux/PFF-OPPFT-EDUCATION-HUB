@@ -52,23 +52,42 @@ class MentorSystemSeeder extends Seeder
         ]);
 
         // 4. Create a Project
-        $project = Project::create([
+        $project1 = Project::create([
             'utilisateur_id' => $student->id, 
             'category_id'    => $category->id,
             'titre'          => 'E-commerce App',
-            'description'    => 'A full stack web application project',
+            'description'    => 'A pending project for testing requests',
             'status'         => 'active',        
             'estGagantMois'  => false,           
-            'nb_votes'       => 0,
+            'nb_votes'       => 10, 
+            'global_score'   => 0, 
             'date_publication' => now()
         ]);
 
-        // 5. Create the Request
         ProjectMentorRequest::create([
-            'project_id'  => $project->id,
+            'project_id'  => $project1->id,
             'etudiant_id' => $student->id,
             'mentor_id'   => $mentor->id,
             'status'      => 'pending' 
+        ]);
+
+        $project2 = Project::create([
+            'utilisateur_id' => $student->id, 
+            'category_id'    => $category->id,
+            'titre'          => 'Portfolio Project',
+            'description'    => 'A project already accepted for testing reviews',
+            'status'         => 'active',        
+            'estGagantMois'  => false,           
+            'nb_votes'       => 5,
+            'global_score'   => 0,
+            'date_publication' => now()->subDays(2)
+        ]);
+
+        ProjectMentorRequest::create([
+            'project_id'  => $project2->id,
+            'etudiant_id' => $student->id,
+            'mentor_id'   => $mentor->id,
+            'status'      => 'accepted' 
         ]);
     }
 }
