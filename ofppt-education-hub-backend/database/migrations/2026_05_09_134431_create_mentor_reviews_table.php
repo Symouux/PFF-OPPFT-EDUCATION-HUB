@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('innovation');
             $table->integer('performance');
             $table->integer('presentation');
-            $table->integer('final_score');
+            $table->decimal('final_score', 5, 2);
             $table->text('comment');
             $table->unique(['mentor_id', 'project_id']);
             $table->timestamps();
