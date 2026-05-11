@@ -6,6 +6,7 @@ use App\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Mentor\MentorRequestController;
+use App\Http\Controllers\Mentor\MentorReviewController;
 
 //  Route de test public
 Route::get('/ping', function () {
@@ -58,5 +59,14 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/mentor/request/{id}/reject', [MentorRequestController::class, 'reject']);
 
         Route::get('/mentor/accepted-projects', [MentorRequestController::class, 'acceptedProjects']);
+
+
+        // Mentor Reviews
+
+        Route::post('/mentor/review', [MentorReviewController::class, 'store']);
+
+        Route::get('/mentor/reviews', [MentorReviewController::class, 'myReviews']);
+
+        Route::get('/mentor/review/{id}', [MentorReviewController::class, 'show']);
 });
 });
