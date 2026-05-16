@@ -22,7 +22,33 @@ class MentorRequestController extends Controller
         ->latest()
         ->get();
 
-        return response()->json($requests);
+        // Count unread notifications
+        $unreadCount = ProjectMentorRequest::where('mentor_id', $mentor->id)
+        ->where('status', 'pending')
+        ->where('is_read', false)
+        ->count();
+
+        return response()->json([
+            'notifications' => $requests,
+            'unread_count' => $unreadCount
+        ]);
+    }
+
+    // Mark all notifications as read
+    public function markAsRead()
+    {
+        $mentor = auth('api')->user();
+
+        ProjectMentorRequest::where('mentor_id', $mentor->id)
+            ->where('status', 'pending')
+            ->where('is_read', false)
+            ->update([
+                'is_read' => true
+            ]);
+
+        return response()->json([
+            'message' => 'Notifications marked as read'
+        ]);
     }
 
     // Accept mentor request

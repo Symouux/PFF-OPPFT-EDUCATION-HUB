@@ -24,6 +24,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->enum('status', ['pending', 'accepted', 'rejected'])
                 ->default('pending');
+            $table->boolean('is_read')->default(false);
             $table->unique(['project_id', 'etudiant_id', 'mentor_id']);
             $table->timestamps();
         });

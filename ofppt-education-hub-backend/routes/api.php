@@ -59,6 +59,8 @@ Route::middleware('auth:api')->group(function () {
 
         Route::get('/mentor/requests', [MentorRequestController::class, 'index']);
 
+        Route::put('/mentor/notifications/read', [MentorRequestController::class, 'markAsRead']);
+
         Route::put('/mentor/request/{id}/accept', [MentorRequestController::class, 'accept']);
 
         Route::put('/mentor/request/{id}/reject', [MentorRequestController::class, 'reject']);
