@@ -5,6 +5,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Mentor\MentorDashboardController;
 use App\Http\Controllers\Mentor\MentorRequestController;
 use App\Http\Controllers\Mentor\MentorReviewController;
 
@@ -49,6 +50,10 @@ Route::middleware('auth:api')->group(function () {
 
     // Mentor
     Route::middleware('mentor')->group(function () {
+
+        // Mentor Statistiques
+
+        Route::get('/mentor/dashboard/statistics', [MentorDashboardController::class, 'statistics']);
 
         // Mentor Requests
 
