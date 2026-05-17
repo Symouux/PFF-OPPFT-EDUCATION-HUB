@@ -7,8 +7,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call([
-            MentorSystemSeeder::class,
-        ]);
+        //
     }
 }

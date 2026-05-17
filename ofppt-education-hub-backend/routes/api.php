@@ -5,6 +5,8 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Chat\ConversationController;
+use App\Http\Controllers\Chat\MessageController;
 use App\Http\Controllers\Mentor\MentorDashboardController;
 use App\Http\Controllers\Mentor\MentorRequestController;
 use App\Http\Controllers\Mentor\MentorReviewController;
@@ -44,6 +46,24 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/projects', [ProjectController::class, 'store']);
         Route::post('/resources', [ResourceController::class, 'store']);
     });
+
+
+    // Conversations
+
+    Route::get('/conversations', [ConversationController::class, 'index']);
+
+    Route::post('/conversations', [ConversationController::class, 'store']);
+
+
+    // Messages
+
+    Route::get('/messages/{conversationId}', [MessageController::class, 'index']);
+
+    Route::post('/messages', [MessageController::class, 'store']);
+
+    Route::put('/messages/read/{conversationId}', [MessageController::class, 'markAsRead']);
+
+    Route::get('/messages/unread/count', [MessageController::class, 'unreadCount']);
 
 
 
