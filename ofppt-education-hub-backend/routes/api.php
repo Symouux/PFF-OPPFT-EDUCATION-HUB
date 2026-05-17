@@ -44,6 +44,9 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/previews/drive', [PreviewController::class, 'drive']);
 
         Route::post('/projects', [ProjectController::class, 'store']);
+        Route::put('/projects/{id}', [ProjectController::class, 'update']);
+        Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
+
         Route::post('/resources', [ResourceController::class, 'store']);
     });
 
@@ -65,6 +68,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/messages/unread/count', [MessageController::class, 'unreadCount']);
 
+    // Projects Show
+    Route::get('/projects/{id}', [ProjectController::class, 'show']);
 
 
 
@@ -95,5 +100,5 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/mentor/reviews', [MentorReviewController::class, 'myReviews']);
 
         Route::get('/mentor/review/{id}', [MentorReviewController::class, 'show']);
-});
+    });
 });
