@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 class StudentMentorRequestController extends Controller
 {
+    // Envoi des mentor requests
     public function store(Request $req)
     {
         $data = $req->validate([
@@ -36,7 +37,7 @@ class StudentMentorRequestController extends Controller
             ], 400);
         }
 
-        if(!$mentor->mentorProfile()){
+        if(!$mentor->mentorProfile){
             return response()->json([
                 'message' => 'Mentor profile not found !'
             ], 404);
@@ -72,5 +73,23 @@ class StudentMentorRequestController extends Controller
             'message' => 'Request sent successfully !',
             'data' => $mentorRequest
         ], 201);
+    }
+
+    // Suivi des requests envoyées
+    public function index()
+    {
+        $requests = ProjectMentorRequest::with([
+                                            'project',
+                                            'userMentor.profil',
+                                            'userMentor.mentorProfile'
+                                        ])
+                                        ->where('etudiant_id', auth()->id())
+                                        ->latest()
+                                        ->get();
+
+        return response()->json([
+            'message' => 'All your projects requests !',
+            'data' => $requests
+        ], 200);
     }
 }

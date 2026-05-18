@@ -40,6 +40,7 @@ Route::middleware('auth:api')->group(function () {
         });
 
         Route::post('/mentor_requests', [StudentMentorRequestController::class, 'store']);
+        Route::get('/mentor_requests', [StudentMentorRequestController::class, 'index']);
     });
 
     Route::middleware('publisher')->group(function(){
