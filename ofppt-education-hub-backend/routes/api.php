@@ -3,6 +3,7 @@
 use App\Http\Controllers\PreviewController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\Student\StudentMentorRequestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Chat\ConversationController;
@@ -37,6 +38,8 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/student/test', function () {
             return response()->json(['message' => 'Welcome Student!']);
         });
+
+        Route::post('/mentor_requests', [StudentMentorRequestController::class, 'store']);
     });
 
     Route::middleware('publisher')->group(function(){
