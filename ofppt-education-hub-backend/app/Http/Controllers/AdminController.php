@@ -10,6 +10,8 @@ use App\Models\Project;
 use App\Models\Vote;
 use App\Models\Resource;
 use Illuminate\Http\Request;
+use App\Imports\UsersImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
@@ -64,6 +66,69 @@ class AdminController extends Controller
         return response()->json([
             'message' => 'Utilisateur supprimé avec succès'
         ], 200);
+    }
+    // 4) importer des utilisateurs depuis un fichier Excel/CSV
+    public function importUsers(Request $request)
+    {
+        // Valider le fichier — obligatoire, max 2MB, xlsx ou csv
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv|max:2048'
+        ]);
+
+        $import = new UsersImport();
+
+        Excel::import($import, $request->file('file'));
+
+        return response()->json([
+            'message' => 'Import terminé',
+            'data'    => [
+                'importes' => $import->importes,
+                'ignores'  => $import->ignores,
+                'erreurs'  => $import->erreurs,
+            ]
+        ], 200);
+    }
+    // 5) telecharger un fichier Excel exemple pour l'import
+    public function downloadImportTemplate()
+    {
+        // Données exemple — meme roles que le modele User
+        $headers = ['email', 'password', 'role', 'is_blocked'];
+        $exemples = [
+            ['etudiant1@ofppt.ma', 'password123', 'etudiant', 0],
+            ['mentor1@ofppt.ma',   'password123', 'mentor',   0],
+            ['admin1@ofppt.ma',    'password123', 'admin',    0],
+            ['bloque1@ofppt.ma',   'password123', 'etudiant', 1],
+        ];
+
+        // Creer le fichier Excel en memoire et le retourner directement
+        return Excel::download(new class($headers, $exemples) implements
+            \Maatwebsite\Excel\Concerns\FromArray,
+            \Maatwebsite\Excel\Concerns\WithHeadings,
+            \Maatwebsite\Excel\Concerns\WithStyles
+        {
+            public function __construct(
+                private array $headers,
+                private array $rows
+            ) {}
+
+            public function array(): array
+            {
+                return $this->rows;
+            }
+
+            public function headings(): array
+            {
+                return $this->headers;
+            }
+
+            // Mettre les en-tetes en gras — lisibilite
+            public function styles(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet)
+            {
+                return [
+                    1 => ['font' => ['bold' => true]]
+                ];
+            }
+        }, 'exemple_import_users.xlsx');
     }
 
     /**********gestion des projets ********/
