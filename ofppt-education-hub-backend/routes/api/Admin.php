@@ -11,6 +11,8 @@ use App\Http\Controllers\AdminController;
 Route::get('/users', [AdminController::class, 'getAllUsers']);
 Route::put('/users/{id}/block', [AdminController::class, 'blockUser']);
 Route::delete('/users/{id}', [AdminController::class, 'deleteUser']);
+Route::get('/users/import/template', [AdminController::class, 'downloadImportTemplate']);
+Route::post('/users/import', [AdminController::class, 'importUsers']);
 
 // ============================================
 // GESTION DES PROJETS : Admin peux voir, archiver, suprimer les projet

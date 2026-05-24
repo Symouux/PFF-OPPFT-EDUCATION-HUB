@@ -16,6 +16,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0",
         "livewire/livewire": "^3.6.4",
+        "maatwebsite/excel": "^3.1",
         "php-open-source-saver/jwt-auth": "^2.9"
     },
     "require-dev": {
