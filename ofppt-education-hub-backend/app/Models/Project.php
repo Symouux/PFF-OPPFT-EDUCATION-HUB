@@ -21,6 +21,7 @@ class Project extends Model
         'estGagantMois',
         'status',
         'nb_votes',
+        'global_score',
         'date_publication',
     ];
 

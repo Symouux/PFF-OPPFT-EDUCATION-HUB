@@ -10,7 +10,8 @@ class ProjectMentorRequest extends Model
         'project_id',
         'etudiant_id',
         'mentor_id',
-        'status'
+        'status',
+        'is_read'
     ];
 
     public function project()

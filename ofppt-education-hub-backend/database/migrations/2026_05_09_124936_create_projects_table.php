@@ -31,7 +31,9 @@ return new class extends Migration
             $table->enum('status', ['active', 'archived'])->default('active');
 
             // Nombre de votes calculé
-            $table->integer('nb_votes')->default(0);
+            $table->decimal('nb_votes', 8, 2)->default(0);
+
+            $table->decimal('global_score', 8, 2)->default(0);
 
             $table->timestamp('date_publication')->nullable();
 
