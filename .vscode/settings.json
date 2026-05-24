@@ -1,0 +1,18 @@
+{
+    "editor.inlineSuggest.enabled": false,
+    "editor.inlineSuggest.showToolbar": "never",
+    "editor.suggest.preview": false,
+    "editor.renderValidationDecorations": "off",
+    "editor.occurrencesHighlight": "off",
+    "editor.selectionHighlight": false,
+    "intelliphp.inlineSuggestionsEnabled": false,
+    "github.copilot.completions.enabled": false,
+    "github.copilot.nextEditSuggestions.enabled": false,
+    "github.copilot.renameSuggestions.triggerAutomatically": false,
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    }
+}
