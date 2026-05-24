@@ -3,6 +3,8 @@
 use App\Http\Controllers\PreviewController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\Student\StudentMentorRequestController;
+use App\Http\Controllers\Student\StudentVoteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Chat\ConversationController;
@@ -37,6 +39,11 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/student/test', function () {
             return response()->json(['message' => 'Welcome Student!']);
         });
+
+        Route::post('/mentor_requests', [StudentMentorRequestController::class, 'store']);
+        Route::get('/mentor_requests', [StudentMentorRequestController::class, 'index']);
+
+        Route::post('/projects/{id}/vote', [StudentVoteController::class, 'store']);
     });
 
     Route::middleware('publisher')->group(function(){
@@ -44,6 +51,9 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/previews/drive', [PreviewController::class, 'drive']);
 
         Route::post('/projects', [ProjectController::class, 'store']);
+        Route::put('/projects/{id}', [ProjectController::class, 'update']);
+        Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
+
         Route::post('/resources', [ResourceController::class, 'store']);
     });
 
@@ -65,6 +75,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/messages/unread/count', [MessageController::class, 'unreadCount']);
 
+    // Projects Show
+    Route::get('/projects/{id}', [ProjectController::class, 'show']);
 
 
 
@@ -95,5 +107,5 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/mentor/reviews', [MentorReviewController::class, 'myReviews']);
 
         Route::get('/mentor/review/{id}', [MentorReviewController::class, 'show']);
-});
+    });
 });
