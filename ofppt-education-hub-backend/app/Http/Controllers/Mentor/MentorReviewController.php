@@ -74,8 +74,11 @@ class MentorReviewController extends Controller
         // Find project
         $project = Project::findOrFail($request->project_id);
 
+        $totalReviewScore = MentorReview::where('project_id', $project->id)
+            ->sum('final_score');
+
         // Calculate global score
-        $globalScore = (int)$project->nb_votes + $finalScore;
+        $globalScore = (float)$project->nb_votes + (float) $totalReviewScore;
 
         // Update project global score
         $project->update([
