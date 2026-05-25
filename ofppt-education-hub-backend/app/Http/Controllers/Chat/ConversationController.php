@@ -6,7 +6,6 @@ use App\Models\Conversation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-
 class ConversationController extends Controller
 {
     // Get all user conversations
@@ -14,7 +13,6 @@ class ConversationController extends Controller
     {
         $user = auth('api')->user();
 
-        // Get user conversations
         $conversations = Conversation::with([
             'userOne.profil',
             'userTwo.profil'
@@ -32,37 +30,27 @@ class ConversationController extends Controller
     {
         $user = auth('api')->user();
 
-        // Validate request
         $request->validate([
             'user_id' => 'required|exists:users,id'
         ]);
 
-        // Prevent conversation with self
         if ($request->user_id == $user->id) {
             return response()->json([
                 'message' => 'You cannot chat with yourself'
             ], 400);
         }
 
-        // Check if conversation already exists
-        $conversation = Conversation::where(function ($query) use ($user, $request) {
+        $userOne = min($user->id, $request->user_id);
+        $userTwo = max($user->id, $request->user_id);
 
-            $query->where('user_one', $user->id)
-                  ->where('user_two', $request->user_id);
+        $conversation = Conversation::where('user_one', $userOne)
+            ->where('user_two', $userTwo)
+            ->first();
 
-        })->orWhere(function ($query) use ($user, $request) {
-
-            $query->where('user_one', $request->user_id)
-                  ->where('user_two', $user->id);
-
-        })->first();
-
-        // Create new conversation if not exists
         if (!$conversation) {
-
             $conversation = Conversation::create([
-                'user_one' => $user->id,
-                'user_two' => $request->user_id,
+                'user_one' => $userOne,
+                'user_two' => $userTwo,
             ]);
         }
 
