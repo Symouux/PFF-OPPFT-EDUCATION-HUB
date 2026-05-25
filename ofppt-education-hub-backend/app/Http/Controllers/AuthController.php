@@ -10,18 +10,19 @@ class AuthController extends Controller
 {
     public function register(Request $req)
     {
-        $email = $req->email;
-        $password = $req->password;
+        $data = $req->validate([
+            'nom_complet' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'bio' => ['nullable', 'string'],
+            'photo' => ['nullable', 'image', 'max:2048'],
+            'lien_linkedin' => ['nullable', 'url'],
+            'lien_github' => ['nullable', 'url'],
+        ]);
+
+        $email = $data['email'];
+        $password = $data['password'];
         $role = 'etudiant';
-
-        // 1/ Email Check, ElAnani Comment
-        $exists = User::where('email', $email)->first();
-
-        if ($exists) {
-            return response()->json([
-                'message' => 'Email Deja Existe !'
-            ], 401);
-        }
 
         // 2/ Password Hash, ElAnani Comment
         $password_hash = Hash::make($password);
@@ -43,11 +44,11 @@ class AuthController extends Controller
 
         // 5/ Create Profile, ElAnani Comment
         $user->profil()->create([
-            'nom_complet' => $req->nom_complet,
-            'bio' => $req->bio,
+            'nom_complet' => $data['nom_complet'],
+            'bio' => $data['bio'] ?? null,
             'photo' => $photoPath,
-            'lien_linkedin' => $req->lien_linkedin,
-            'lien_github' => $req->lien_github,
+            'lien_linkedin' => $data['lien_linkedin'] ?? null,
+            'lien_github' => $data['lien_github'] ?? null,
             'score_mensuel' => 0
         ]);
 
