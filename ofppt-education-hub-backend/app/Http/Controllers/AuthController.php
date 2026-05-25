@@ -12,7 +12,7 @@ class AuthController extends Controller
     {
         $email = $req->email;
         $password = $req->password;
-        $role = $req->role ?? 'etudiant';
+        $role = 'etudiant';
 
         // 1/ Email Check, ElAnani Comment
         $exists = User::where('email', $email)->first();
@@ -21,13 +21,6 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Email Deja Existe !'
             ], 401);
-        }
-
-        // 2/ Role Check, ElAnani Comment
-        if (!in_array($role, ['etudiant', 'mentor', 'admin'])) {
-            return response()->json([
-                'message' => 'Invalid role'
-            ], 400);
         }
 
         // 2/ Password Hash, ElAnani Comment
