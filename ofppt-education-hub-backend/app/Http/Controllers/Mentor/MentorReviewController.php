@@ -52,11 +52,11 @@ class MentorReviewController extends Controller
         }
 
         // Calculate final score
-        $finalScore = (int)$request->code_quality +
-              (int)$request->ui_ux +
-              (int)$request->innovation +
-              (int)$request->performance +
-              (int)$request->presentation;
+        $finalScore = (float)$request->code_quality +
+                (float)$request->ui_ux +
+                (float)$request->innovation +
+                (float)$request->performance +
+                (float)$request->presentation;
 
         // Create mentor review
         $review = MentorReview::create([
