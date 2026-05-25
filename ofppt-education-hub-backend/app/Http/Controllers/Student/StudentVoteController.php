@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Vote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StudentVoteController extends Controller
 {
@@ -34,13 +35,17 @@ class StudentVoteController extends Controller
             ], 409);
         }
 
-        $vote = Vote::create([
-            'utilisateur_id' => auth()->id(),
-            'project_id' => $project->id,
-            'date_vote' => now()
-        ]);
+        $vote = DB::transaction(function () use ($project) {
+            $vote = Vote::create([
+                'utilisateur_id' => auth()->id(),
+                'project_id' => $project->id,
+                'date_vote' => now()
+            ]);
 
-        $project->increment('nb_votes');
+            $project->increment('nb_votes');
+
+            return $vote;
+        });
 
         return response()->json([
             'message' => 'Vote added successfully !',
