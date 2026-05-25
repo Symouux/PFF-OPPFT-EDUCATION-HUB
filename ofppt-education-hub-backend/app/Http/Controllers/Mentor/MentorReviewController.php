@@ -24,7 +24,7 @@ class MentorReviewController extends Controller
             'innovation' => 'required|numeric|min:0|max:5',
             'performance' => 'required|numeric|min:0|max:5',
             'presentation' => 'required|numeric|min:0|max:5',
-            'comment' => 'nullable|string'
+            'comment' => 'required|string'
         ]);
 
         // Check if mentor accepted this project request
