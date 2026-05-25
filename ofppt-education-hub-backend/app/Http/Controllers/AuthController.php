@@ -71,6 +71,12 @@ class AuthController extends Controller
             ], 404);
         }
 
+        if($user->is_blocked){
+            return response()->json([
+                'message' => 'Your account is blocked'
+            ], 403);
+        }
+
         // 2/ Compare Password, ElAnani Comment
         if (!Hash::check($password, $user->password)) {
             return response()->json([
