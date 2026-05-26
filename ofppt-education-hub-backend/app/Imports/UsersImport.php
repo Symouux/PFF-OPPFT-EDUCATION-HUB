@@ -60,7 +60,7 @@ class UsersImport implements ToModel, WithHeadingRow, SkipsOnError
         // Tout est bon → créer l'utilisateur
         $this->importes++;
 
-        return new User([
+        $user = User::create([
             'email'            => $row['email'],
             'password'         => Hash::make($row['password']),
             'role'             => strtolower($row['role']),
@@ -68,5 +68,16 @@ class UsersImport implements ToModel, WithHeadingRow, SkipsOnError
             // is_blocked : 0 par défaut, ou lire depuis le fichier si présent
             'is_blocked'       => isset($row['is_blocked']) ? (bool)$row['is_blocked'] : false,
         ]);
+
+        $user->profil()->create([
+            'nom_complet' => $row['nom_complet'] ?? $row['email'],
+            'bio' => null,
+            'photo' => null,
+            'lien_linkedin' => null,
+            'lien_github' => null,
+            'score_mensuel' => 0,
+        ]);
+
+        return null;
     }
 }

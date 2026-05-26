@@ -92,12 +92,12 @@ class AdminController extends Controller
     public function downloadImportTemplate()
     {
         // Données exemple — meme roles que le modele User
-        $headers = ['email', 'password', 'role', 'is_blocked'];
+        $headers = ['nom_complet', 'email', 'password', 'role', 'is_blocked'];
         $exemples = [
-            ['etudiant1@ofppt.ma', 'password123', 'etudiant', 0],
-            ['mentor1@ofppt.ma',   'password123', 'mentor',   0],
-            ['admin1@ofppt.ma',    'password123', 'admin',    0],
-            ['bloque1@ofppt.ma',   'password123', 'etudiant', 1],
+            ['Etudiant Test1', 'etudiant1@ofppt.ma', 'password123', 'etudiant', 0],
+            ['Mentor Test1', 'mentor1@ofppt.ma',   'password123', 'mentor',   0],
+            ['Admin Test1', 'admin1@ofppt.ma',    'password123', 'admin',    0],
+            ['Bloque Test1', 'bloque1@ofppt.ma',   'password123', 'etudiant', 1],
         ];
 
         // Creer le fichier Excel en memoire et le retourner directement
