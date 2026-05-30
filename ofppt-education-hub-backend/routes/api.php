@@ -10,6 +10,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Chat\ConversationController;
 use App\Http\Controllers\Chat\MessageController;
 use App\Http\Controllers\Mentor\MentorDashboardController;
+use App\Http\Controllers\Mentor\MentorProfileController;
 use App\Http\Controllers\Mentor\MentorRequestController;
 use App\Http\Controllers\Mentor\MentorReviewController;
 
@@ -82,6 +83,10 @@ Route::middleware('auth:api')->group(function () {
 
     // Mentor
     Route::middleware('mentor')->group(function () {
+
+        // Profile
+
+        Route::get('/mentor/profile', [MentorProfileController::class, 'show']);
 
         // Mentor Statistiques
 
