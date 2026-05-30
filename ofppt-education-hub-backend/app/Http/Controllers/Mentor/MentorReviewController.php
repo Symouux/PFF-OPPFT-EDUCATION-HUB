@@ -24,7 +24,7 @@ class MentorReviewController extends Controller
             'innovation' => 'required|numeric|min:0|max:5',
             'performance' => 'required|numeric|min:0|max:5',
             'presentation' => 'required|numeric|min:0|max:5',
-            'comment' => 'nullable|string'
+            'comment' => 'required|string'
         ]);
 
         // Check if mentor accepted this project request
@@ -52,11 +52,11 @@ class MentorReviewController extends Controller
         }
 
         // Calculate final score
-        $finalScore = (int)$request->code_quality +
-              (int)$request->ui_ux +
-              (int)$request->innovation +
-              (int)$request->performance +
-              (int)$request->presentation;
+        $finalScore = (float)$request->code_quality +
+                (float)$request->ui_ux +
+                (float)$request->innovation +
+                (float)$request->performance +
+                (float)$request->presentation;
 
         // Create mentor review
         $review = MentorReview::create([
@@ -74,8 +74,11 @@ class MentorReviewController extends Controller
         // Find project
         $project = Project::findOrFail($request->project_id);
 
+        $totalReviewScore = MentorReview::where('project_id', $project->id)
+            ->sum('final_score');
+
         // Calculate global score
-        $globalScore = (int)$project->nb_votes + $finalScore;
+        $globalScore = (float)$project->nb_votes + (float) $totalReviewScore;
 
         // Update project global score
         $project->update([

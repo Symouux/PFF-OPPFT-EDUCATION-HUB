@@ -43,6 +43,12 @@ class StudentMentorRequestController extends Controller
             ], 404);
         }
 
+        if (!$mentor->mentorProfile->is_available) {
+            return response()->json([
+                'message' => 'Mentor is not available'
+            ], 403);
+        }
+
         if($project->utilisateur_id !== auth()->id()){
             return response()->json([
                 'message' => 'Forbidden'
