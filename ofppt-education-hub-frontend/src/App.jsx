@@ -13,6 +13,7 @@ import MentorDashboard from "./pages/Mentor/MentorDashboard";
 import MentorChat from "./pages/Mentor/MentorChat";
 import MentorProjects from "./pages/Mentor/MentorProjects";
 import MentorReview from "./pages/Mentor/MentorReview";
+import MentorProfile from "./pages/Mentor/MentorProfile";
 const AdminPage = () => <h1>Page Admin</h1>;
 
 const EtudiantPage = () => <h1>Page Étudiant</h1>;
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="chat" element={<MentorChat />} />
           <Route path="projects" element={<MentorProjects />} />
           <Route path="review/:projectId" element={<MentorReview />} />
+          <Route path="profile" element={<MentorProfile />} />
         </Route>
       </Route>
 
