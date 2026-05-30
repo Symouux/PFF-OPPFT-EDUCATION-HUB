@@ -90,10 +90,6 @@ class User extends Authenticatable implements JWTSubject
     //un etudiant peut voter plusieurs fois pour differente projet
     public function votes()
     {
-        if ($this->role !== 'etudiant') {
-            return null;
-        }
-
         return $this->hasMany(Vote::class, 'utilisateur_id');
     }
 

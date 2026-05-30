@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Chat;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Conversation;
 
 class MessageController extends Controller
 {
@@ -13,9 +14,21 @@ class MessageController extends Controller
     {
         $user = auth('api')->user();
 
-        // Get conversation messages
+        $conversation = Conversation::where('id', $conversationId)
+            ->where(function ($query) use ($user) {
+                $query->where('user_one', $user->id)
+                    ->orWhere('user_two', $user->id);
+            })
+            ->first();
+
+        if (!$conversation) {
+            return response()->json([
+                'message' => 'Conversation not found'
+            ], 404);
+        }
+
         $messages = Message::with('sender.profil')
-            ->where('conversation_id', $conversationId)
+            ->where('conversation_id', $conversation->id)
             ->latest()
             ->get();
 
@@ -27,15 +40,26 @@ class MessageController extends Controller
     {
         $user = auth('api')->user();
 
-        // Validate request
         $request->validate([
             'conversation_id' => 'required|exists:conversations,id',
             'message' => 'required|string'
         ]);
 
-        // Create message
+        $conversation = Conversation::where('id', $request->conversation_id)
+            ->where(function ($query) use ($user) {
+                $query->where('user_one', $user->id)
+                    ->orWhere('user_two', $user->id);
+            })
+            ->first();
+
+        if (!$conversation) {
+            return response()->json([
+                'message' => 'Conversation not found'
+            ], 404);
+        }
+
         $message = Message::create([
-            'conversation_id' => $request->conversation_id,
+            'conversation_id' => $conversation->id,
             'sender_id' => $user->id,
             'message' => $request->message,
             'is_read' => false
@@ -44,7 +68,7 @@ class MessageController extends Controller
         return response()->json([
             'message' => 'Message sent successfully',
             'data' => $message
-        ]);
+        ], 201);
     }
 
     // Mark messages as read
@@ -52,8 +76,20 @@ class MessageController extends Controller
     {
         $user = auth('api')->user();
 
-        // Mark unread messages as read
-        Message::where('conversation_id', $conversationId)
+        $conversation = Conversation::where('id', $conversationId)
+            ->where(function ($query) use ($user) {
+                $query->where('user_one', $user->id)
+                    ->orWhere('user_two', $user->id);
+            })
+            ->first();
+
+        if (!$conversation) {
+            return response()->json([
+                'message' => 'Conversation not found'
+            ], 404);
+        }
+
+        Message::where('conversation_id', $conversation->id)
             ->where('sender_id', '!=', $user->id)
             ->where('is_read', false)
             ->update([
@@ -64,15 +100,17 @@ class MessageController extends Controller
             'message' => 'Messages marked as read'
         ]);
     }
-
     // Get unread messages count
     public function unreadCount()
     {
         $user = auth('api')->user();
 
-        // Count unread messages
         $count = Message::where('sender_id', '!=', $user->id)
             ->where('is_read', false)
+            ->whereHas('conversation', function ($query) use ($user) {
+                $query->where('user_one', $user->id)
+                    ->orWhere('user_two', $user->id);
+            })
             ->count();
 
         return response()->json([

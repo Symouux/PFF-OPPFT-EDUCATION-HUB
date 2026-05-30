@@ -120,8 +120,46 @@ class PreviewController extends Controller
 
     public function drive(Request $req)
     {
+        $data = $req->validate([
+            'url' => ['required', 'url']
+        ]);
+
+        $fileId = $this->parseDriveFileId($data['url']);
+
         return response()->json([
-            'message' => 'Drive endpoint works'
+            'provider' => 'drive',
+            'file_id' => $fileId,
+            'original_url' => $data['url'],
+            'preview_url' => "https://drive.google.com/file/d/{$fileId}/view",
+            'embed_url' => "https://drive.google.com/file/d/{$fileId}/preview",
+            'download_url' => "https://drive.google.com/uc?export=download&id={$fileId}",
+        ]);
+    }
+
+    private function parseDriveFileId(string $url): string
+    {
+        $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
+
+        if (!in_array($host, ['drive.google.com', 'docs.google.com'])) {
+            throw ValidationException::withMessages([
+                'url' => 'The URL must be a Google Drive link!'
+            ]);
+        }
+
+        $path = parse_url($url, PHP_URL_PATH) ?? '';
+
+        if (preg_match('#/file/d/([^/]+)#', $path, $matches)) {
+            return $matches[1];
+        }
+
+        parse_str(parse_url($url, PHP_URL_QUERY) ?? '', $query);
+
+        if (!empty($query['id'])) {
+            return $query['id'];
+        }
+
+        throw ValidationException::withMessages([
+            'url' => 'Invalid Google Drive file URL!'
         ]);
     }
 }

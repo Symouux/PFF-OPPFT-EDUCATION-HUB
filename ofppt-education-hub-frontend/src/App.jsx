@@ -10,6 +10,9 @@ import ProjectList from "./pages/Admin/Projects";
 import ResourceList from "./pages/Admin/Resources";
 import MentorLayout from "./pages/Mentor/MentorLayout";
 import MentorDashboard from "./pages/Mentor/MentorDashboard";
+import MentorChat from "./pages/Mentor/MentorChat";
+import MentorProjects from "./pages/Mentor/MentorProjects";
+import MentorReview from "./pages/Mentor/MentorReview";
 const AdminPage = () => <h1>Page Admin</h1>;
 
 const EtudiantPage = () => <h1>Page Étudiant</h1>;
@@ -22,7 +25,6 @@ export default function App() {
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-
       {/* Admin route*/}
       <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
         <Route path="/admin" element={<AdminLayout />}>
@@ -35,16 +37,17 @@ export default function App() {
           {/* <Route path="resources" element={<ResourceList />} /> */}
         </Route>
       </Route>
-
       {/* Etudiant route*/}
       <Route element={<ProtectedRoute allowedRoles={["etudiant"]} />}>
         <Route path="/etudiant" element={<EtudiantPage />} />
       </Route>
-
       {/* Mentor route*/}
       <Route element={<ProtectedRoute allowedRoles={["mentor"]} />}>
         <Route path="/mentor" element={<MentorLayout />}>
           <Route index element={<MentorDashboard />} />
+          <Route path="chat" element={<MentorChat />} />
+          <Route path="projects" element={<MentorProjects />} />
+          <Route path="review/:projectId" element={<MentorReview />} />
         </Route>
       </Route>
 
