@@ -12,7 +12,7 @@ class MentorDashboardController extends Controller
     // Mentor dashboard statistics
     public function statistics()
     {
-        
+
         $mentor = auth('api')->user();
 
         // Total requests received
@@ -53,5 +53,34 @@ class MentorDashboardController extends Controller
             'not_evaluated_projects' => $notEvaluatedProjects,
             'winning_projects' => $winningProjects,
         ]);
+    }
+
+    // Historique mensuel des 6 derniers mois des demandes de mentorat et des évaluations
+    public function chartData()
+    {
+        $mentor = auth('api')->user();
+
+        $data = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = now()->subMonths($i);
+
+            $soumis = ProjectMentorRequest::where('mentor_id', $mentor->id)
+                ->whereYear('created_at', $month->year)
+                ->whereMonth('created_at', $month->month)
+                ->count();
+
+            $evalues = MentorReview::where('mentor_id', $mentor->id)
+                ->whereYear('created_at', $month->year)
+                ->whereMonth('created_at', $month->month)
+                ->count();
+
+            $data[] = [
+                'month'   => $month->locale('fr')->isoFormat('MMM'),
+                'soumis'  => $soumis,
+                'evalues' => $evalues,
+            ];
+        }
+
+        return response()->json($data);
     }
 }

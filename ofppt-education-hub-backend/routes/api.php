@@ -46,7 +46,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/projects/{id}/vote', [StudentVoteController::class, 'store']);
     });
 
-    Route::middleware('publisher')->group(function(){
+    Route::middleware('publisher')->group(function () {
         Route::post('/previews/github', [PreviewController::class, 'github']);
         Route::post('/previews/drive', [PreviewController::class, 'drive']);
 
@@ -86,6 +86,7 @@ Route::middleware('auth:api')->group(function () {
         // Mentor Statistiques
 
         Route::get('/mentor/dashboard/statistics', [MentorDashboardController::class, 'statistics']);
+        Route::get('/mentor/dashboard/chart', [MentorDashboardController::class, 'chartData']);
 
         // Mentor Requests
 
@@ -98,6 +99,8 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/mentor/request/{id}/reject', [MentorRequestController::class, 'reject']);
 
         Route::get('/mentor/accepted-projects', [MentorRequestController::class, 'acceptedProjects']);
+
+
 
 
         // Mentor Reviews
