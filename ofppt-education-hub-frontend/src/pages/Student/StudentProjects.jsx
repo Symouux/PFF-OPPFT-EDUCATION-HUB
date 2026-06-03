@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Edit2, Trash2, Github, ExternalLink, Globe } from "lucide-react";
+import { Plus, Edit2, Trash2, ExternalLink, Globe } from "lucide-react";
 import {
   getProjects,
   getCategories,

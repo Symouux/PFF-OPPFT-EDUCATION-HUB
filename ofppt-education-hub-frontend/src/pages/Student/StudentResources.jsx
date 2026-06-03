@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { BookOpen, ExternalLink, Calendar, User, Eye, X } from "lucide-react";
-import { getResources, fetchDrivePreview } from "../../api/studentApi";
+import { BookOpen, ExternalLink, Calendar, User, Eye, X, Plus } from "lucide-react";
+import { getResources, fetchDrivePreview, createResource } from "../../api/studentApi";
 import "./Student.css";
 
 export default function StudentResources() {
@@ -12,6 +12,18 @@ export default function StudentResources() {
   const [previewResource, setPreviewResource] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [previewLoading, setPreviewLoading] = useState(false);
+
+  // Create Modal State
+  const [modalOpen, setModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    titre: "",
+    url_fichier: "",
+    type: "drive",
+  });
+  const [saving, setSaving] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [formPreviewUrl, setFormPreviewUrl] = useState("");
+  const [formPreviewLoading, setFormPreviewLoading] = useState(false);
 
   useEffect(() => {
     fetchResources();
@@ -57,6 +69,92 @@ export default function StudentResources() {
     setPreviewUrl("");
   };
 
+  const handleOpenCreate = () => {
+    setFormData({
+      titre: "",
+      url_fichier: "",
+      type: "drive",
+    });
+    setFormError("");
+    setFormPreviewUrl("");
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleGeneratePreview = async () => {
+    setFormError("");
+    setFormPreviewUrl("");
+    const url = formData.url_fichier.trim();
+    if (!url) {
+      setFormError("Veuillez saisir une URL.");
+      return;
+    }
+    if (!url.includes("drive.google.com") && !url.includes("docs.google.com")) {
+      setFormError("L'URL doit être un lien Google Drive ou Google Docs.");
+      return;
+    }
+    setFormPreviewLoading(true);
+    try {
+      const parsed = await fetchDrivePreview(url);
+      setFormPreviewUrl(parsed.embed_url);
+    } catch (err) {
+      console.warn("Could not fetch preview", err);
+      // Fallback preview URL generation logic
+      let embedFallback = url;
+      if (url.includes("/file/d/")) {
+        const parts = url.split("/file/d/");
+        if (parts[1]) {
+          const fileId = parts[1].split("/")[0];
+          embedFallback = `https://drive.google.com/file/d/${fileId}/preview`;
+        }
+      }
+      setFormPreviewUrl(embedFallback);
+    } finally {
+      setFormPreviewLoading(false);
+    }
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setFormError("");
+
+    const url = formData.url_fichier.trim();
+    if (!url) {
+      setFormError("Le lien de la ressource est requis.");
+      setSaving(false);
+      return;
+    }
+
+    if (!url.includes("drive.google.com") && !url.includes("docs.google.com")) {
+      setFormError("L'URL doit être un lien Google Drive ou Google Docs.");
+      setSaving(false);
+      return;
+    }
+
+    try {
+      await createResource({
+        titre: formData.titre.trim(),
+        url_fichier: url,
+        type: formData.type,
+      });
+      handleCloseModal();
+      fetchResources();
+    } catch (err) {
+      setFormError(err.response?.data?.message || "Erreur lors de la sauvegarde.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="sd-loading">
@@ -81,9 +179,13 @@ export default function StudentResources() {
         <div>
           <h1 className="sd-header__title">Ressources Partagées</h1>
           <p className="sd-header__sub">
-            Accédez aux supports de cours, PDF, et documentations mis à disposition par vos mentors
+            Accédez aux supports de cours, PDF, et documentations ou partagez-en pour la communauté
           </p>
         </div>
+        <button className="sd-btn sd-btn--primary" onClick={handleOpenCreate}>
+          <Plus size={16} />
+          <span>Partager une Ressource</span>
+        </button>
       </div>
 
       {resources.length === 0 ? (
@@ -193,6 +295,132 @@ export default function StudentResources() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Share Resource Modal */}
+      {modalOpen && (
+        <div className="sd-modal-overlay" onClick={handleCloseModal}>
+          <form
+            className="sd-modal sd-modal--wide"
+            onClick={(e) => e.stopPropagation()}
+            onSubmit={handleSave}
+          >
+            <div className="sd-modal__head">
+              <h3 className="sd-modal__title">Partager une Ressource</h3>
+              <button
+                type="button"
+                className="sd-modal__close"
+                onClick={handleCloseModal}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="sd-modal__body">
+              {formError && (
+                <div
+                  style={{
+                    background: "rgba(239, 68, 68, 0.1)",
+                    color: "var(--danger)",
+                    padding: "10px 14px",
+                    borderRadius: "var(--radius-sm)",
+                    fontSize: "13px",
+                    marginBottom: "16px",
+                  }}
+                >
+                  {formError}
+                </div>
+              )}
+
+              {/* Title */}
+              <div className="sd-form-group">
+                <label className="sd-label">Titre de la ressource</label>
+                <input
+                  type="text"
+                  name="titre"
+                  className="sd-input"
+                  placeholder="Ex: Support de cours - Algorithmique et structures de données"
+                  required
+                  value={formData.titre}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              {/* Type */}
+              <div className="sd-form-group">
+                <label className="sd-label">Type de Ressource</label>
+                <select
+                  name="type"
+                  className="sd-select"
+                  value={formData.type}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="drive">Google Drive Document / PDF</option>
+                  <option value="slides">Slides / Présentation</option>
+                  <option value="sheet">Feuille de calcul (Sheet)</option>
+                  <option value="other">Autre format</option>
+                </select>
+              </div>
+
+              {/* URL */}
+              <div className="sd-form-group">
+                <label className="sd-label">Lien Google Drive / Docs du Document</label>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <input
+                    type="url"
+                    name="url_fichier"
+                    className="sd-input"
+                    placeholder="https://drive.google.com/file/d/..."
+                    required
+                    value={formData.url_fichier}
+                    onChange={handleInputChange}
+                    style={{ flex: 1 }}
+                  />
+                  <button
+                    type="button"
+                    className="sd-btn sd-btn--primary"
+                    onClick={handleGeneratePreview}
+                    disabled={formPreviewLoading}
+                  >
+                    {formPreviewLoading ? "Chargement..." : "Vérifier l'aperçu"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Live Preview Panel */}
+              {formPreviewUrl && (
+                <div style={{ marginTop: "16px" }}>
+                  <label className="sd-label" style={{ marginBottom: "8px" }}>Aperçu du document</label>
+                  <iframe
+                    src={formPreviewUrl}
+                    className="preview-frame"
+                    allow="autoplay"
+                    style={{ height: "300px", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)" }}
+                    title="Creation Preview"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="sd-modal__foot">
+              <button
+                type="button"
+                className="sd-btn"
+                onClick={handleCloseModal}
+              >
+                Annuler
+              </button>
+              <button
+                type="submit"
+                className="sd-btn sd-btn--primary"
+                disabled={saving}
+              >
+                {saving ? "Partage..." : "Partager"}
+              </button>
+            </div>
+          </form>
         </div>
       )}
 

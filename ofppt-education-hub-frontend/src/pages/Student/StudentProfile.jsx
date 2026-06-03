@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { User, Mail, Award, Calendar, Link2, Github, Linkedin, Save } from "lucide-react";
+import { User, Mail, Award, Calendar, Link2, Save } from "lucide-react";
+import { Github, Linkedin } from "../../components/Icons";
 import { useAuth } from "../../context/AuthContext";
 import axios from "../../api/axios";
 import "./Student.css";

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Heart,
-  Github,
   ExternalLink,
   BookOpen,
   FolderOpen,
@@ -10,6 +9,7 @@ import {
   ChevronRight,
   TrendingUp,
 } from "lucide-react";
+import { Github } from "../../components/Icons";
 import {
   getProjects,
   getCategories,

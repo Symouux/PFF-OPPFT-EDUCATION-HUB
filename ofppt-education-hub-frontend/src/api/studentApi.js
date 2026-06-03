@@ -95,3 +95,9 @@ export const fetchDrivePreview = async (url) => {
   const res = await axios.post("/previews/drive", { url });
   return res.data;
 };
+
+export const createResource = async (data) => {
+  const res = await axios.post("/resources", data);
+  return res.data;
+};
+
