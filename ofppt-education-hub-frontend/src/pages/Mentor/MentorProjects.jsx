@@ -67,7 +67,10 @@ export default function MentorProjects() {
             const reviewed = isReviewed(project?.id);
 
             return (
-              <div className="mp-card" key={req.id}>
+              <div
+                className={`mp-card${reviewed ? " mp-card--done" : ""}`}
+                key={req.id}
+              >
                 {/* Header */}
                 <div className="mp-card__head">
                   <div className="mp-card__category">
@@ -135,13 +138,14 @@ export default function MentorProjects() {
                 </div>
 
                 {/* Footer */}
+                {/* Footer */}
                 <div className="mp-card__footer">
                   {reviewed ? (
                     <button
                       className="mp-btn mp-btn--secondary"
                       onClick={() => navigate(`/mentor/reviews`)}
                     >
-                      <Star size={15} /> Voir évaluation
+                      <Star size={15} /> Voir mes évaluations
                     </button>
                   ) : (
                     <button
@@ -152,8 +156,7 @@ export default function MentorProjects() {
                         })
                       }
                     >
-                      <Star size={15} /> Évaluer
-                      <ChevronRight size={15} />
+                      <Star size={15} /> Évaluer <ChevronRight size={15} />
                     </button>
                   )}
                 </div>

@@ -105,7 +105,6 @@ export default function MentorReview() {
                 <span className="mr-avg__label">AVERAGE SCORE</span>
               </div>
             </div>
-
             {/* Sliders */}
             <div className="mr-criteria">
               {CRITERIA.map(({ key, label, icon: Icon, color }) => (
@@ -114,23 +113,28 @@ export default function MentorReview() {
                     <Icon size={16} color={color} strokeWidth={1.8} />
                     <span>{label}</span>
                   </div>
+                  <div className="mr-criterion__slider-wrap">
+                    <input
+                      type="range"
+                      min="0"
+                      max="5"
+                      step="0.5"
+                      value={scores[key]}
+                      onChange={(e) => handleScore(key, e.target.value)}
+                      className="mr-slider"
+                      style={{ accentColor: color }}
+                    />
+                    <div className="mr-slider__labels">
+                      <span>0</span>
+                      <span>5</span>
+                    </div>
+                  </div>
                   <span className="mr-criterion__score" style={{ color }}>
                     {scores[key].toFixed(1)}
                   </span>
-                  <input
-                    type="range"
-                    min="0"
-                    max="5"
-                    step="0.5"
-                    value={scores[key]}
-                    onChange={(e) => handleScore(key, e.target.value)}
-                    className="mr-slider"
-                    style={{ "--thumb-color": color }}
-                  />
                 </div>
               ))}
             </div>
-
             {/* Comment */}
             <div className="mr-comment">
               <label className="mr-comment__label">
@@ -144,9 +148,7 @@ export default function MentorReview() {
                 onChange={(e) => setComment(e.target.value)}
               />
             </div>
-
             {error && <p className="mr-error">{error}</p>}
-
             {/* Submit */}
             <button
               className={`mr-submit${submitting ? " mr-submit--loading" : ""}`}

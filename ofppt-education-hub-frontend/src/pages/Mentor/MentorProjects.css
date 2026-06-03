@@ -199,3 +199,11 @@
     grid-template-columns: 1fr;
   }
 }
+.mp-card--done {
+  border-top: 3px solid var(--success);
+  opacity: 0.85;
+}
+
+.mp-card--done .mp-card__title {
+  color: var(--text-muted);
+}
