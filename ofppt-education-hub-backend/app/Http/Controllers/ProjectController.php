@@ -105,4 +105,16 @@ class ProjectController extends Controller
             'message' => 'Project deleted successfully !'
         ], 200);
     }
+
+    public function index()
+    {
+        $projects = Project::with(['user.profil', 'categories'])->where('status', 'active')->orderBy('date_publication', 'desc')->get();
+        return response()->json(['data' => $projects], 200);
+    }
+
+    public function getCategories()
+    {
+        $categories = \App\Models\Categorie::all();
+        return response()->json(['data' => $categories], 200);
+    }
 }

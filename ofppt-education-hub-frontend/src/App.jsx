@@ -14,9 +14,13 @@ import MentorChat from "./pages/Mentor/MentorChat";
 import MentorProjects from "./pages/Mentor/MentorProjects";
 import MentorReview from "./pages/Mentor/MentorReview";
 import MentorProfile from "./pages/Mentor/MentorProfile";
-const AdminPage = () => <h1>Page Admin</h1>;
-
-const EtudiantPage = () => <h1>Page Étudiant</h1>;
+import StudentLayout from "./pages/Student/StudentLayout";
+import StudentDashboard from "./pages/Student/StudentDashboard";
+import StudentProjects from "./pages/Student/StudentProjects";
+import StudentMentors from "./pages/Student/StudentMentors";
+import StudentResources from "./pages/Student/StudentResources";
+import StudentChat from "./pages/Student/StudentChat";
+import StudentProfile from "./pages/Student/StudentProfile";
 
 export default function App() {
   return (
@@ -30,17 +34,20 @@ export default function App() {
       <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
-
           <Route path="users" element={<UserList />} />
-
           <Route path="projects" element={<ProjectList />} />
-
-          {/* <Route path="resources" element={<ResourceList />} /> */}
         </Route>
       </Route>
       {/* Etudiant route*/}
       <Route element={<ProtectedRoute allowedRoles={["etudiant"]} />}>
-        <Route path="/etudiant" element={<EtudiantPage />} />
+        <Route path="/etudiant" element={<StudentLayout />}>
+          <Route index element={<StudentDashboard />} />
+          <Route path="projects" element={<StudentProjects />} />
+          <Route path="mentors" element={<StudentMentors />} />
+          <Route path="resources" element={<StudentResources />} />
+          <Route path="chat" element={<StudentChat />} />
+          <Route path="profile" element={<StudentProfile />} />
+        </Route>
       </Route>
       {/* Mentor route*/}
       <Route element={<ProtectedRoute allowedRoles={["mentor"]} />}>

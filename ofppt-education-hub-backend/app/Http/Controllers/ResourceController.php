@@ -36,4 +36,15 @@ class ResourceController extends Controller
             'data' => $resource
         ], 201);
     }
+
+    public function index()
+    {
+        $resources = Resource::with('user.profil')
+                            ->orderBy('date_ajout', 'desc')
+                            ->get();
+
+        return response()->json([
+            'data' => $resources
+        ], 200);
+    }
 }
