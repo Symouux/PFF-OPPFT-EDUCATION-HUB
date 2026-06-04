@@ -1,0 +1,238 @@
+/* StudentNotifications.css */
+
+.sne-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sne-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 200px 1px 1fr;
+  gap: 20px;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: sdFadeUp 0.35s ease both;
+}
+
+.sne-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.sne-card--unread {
+  border-left: 3px solid var(--accent);
+  padding-left: 21px;
+}
+
+.sne-card__dot {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.sne-card__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sne-card__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  font-family: "Syne", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sne-card__mentor-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0 0 3px;
+}
+
+.sne-card__mentor-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.sne-card__divider {
+  width: 1px;
+  height: auto;
+  min-height: 60px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.sne-card__project {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.sne-card__project-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sne-card__category {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(13, 148, 136, 0.1);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.sne-card__date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.sne-card__project-title {
+  font-family: "Syne", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+/* Scores */
+.sne-card__scores {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 6px 0;
+}
+
+.sne-card__score-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 32px;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-body);
+}
+
+.sne-card__score-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.sne-card__score-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-mid), var(--accent));
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.sne-card__final {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-dark);
+  margin: 6px 0 4px;
+  padding: 8px 12px;
+  background: rgba(245, 158, 11, 0.08);
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.sne-card__stars {
+  font-size: 13px;
+  color: #f59e0b;
+  letter-spacing: 1px;
+}
+
+.sne-card__comment {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.5;
+  margin: 4px 0;
+  padding: 8px 12px;
+  background: var(--bg-page);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--accent);
+}
+
+.sne-card__link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  width: fit-content;
+  margin-top: 4px;
+}
+
+.sne-card__link:hover {
+  text-decoration: underline;
+}
+
+/* Empty */
+.sne-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 20px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.sne-empty h3 {
+  font-family: "Syne", sans-serif;
+  font-size: 18px;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.sne-empty p {
+  font-size: 13px;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .sne-card {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .sne-card__divider {
+    display: none;
+  }
+}

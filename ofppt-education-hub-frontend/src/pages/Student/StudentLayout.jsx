@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -7,21 +7,26 @@ import {
   UserCheck,
   BookOpen,
   MessageSquare,
+  MessageCircle,
   User,
   LogOut,
   Menu,
   X,
   ChevronRight,
+  Trophy,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import axios from "../../api/axios";
 import "./Student.css";
 
 const NAV_ITEMS = [
   { to: "/etudiant", label: "Dashboard", icon: LayoutDashboard },
   { to: "/etudiant/projects", label: "Mes Projets", icon: FolderKanban },
+  { to: "/etudiant/notifications", label: "Notifications", icon: Bell },
   { to: "/etudiant/mentors", label: "Mentors", icon: UserCheck },
   { to: "/etudiant/resources", label: "Ressources", icon: BookOpen },
   { to: "/etudiant/chat", label: "Messages", icon: MessageSquare },
+  { to: "/etudiant/leaderboard", label: "Classement", icon: Trophy },
   { to: "/etudiant/profile", label: "Mon Profil", icon: User },
 ];
 
@@ -30,6 +35,25 @@ export default function StudentLayout() {
   const location = useLocation();
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
+  const [notifCount, setNotifCount] = useState(0);
+  const [msgCount, setMsgCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCounts = () => {
+      axios
+        .get("/student/notifications")
+        .then((res) => setNotifCount(res.data.unread_count ?? 0))
+        .catch(() => {});
+      axios
+        .get("/messages/unread/count")
+        .then((res) => setMsgCount(res.data.unread_count ?? 0))
+        .catch(() => {});
+    };
+
+    fetchCounts();
+    const interval = setInterval(fetchCounts, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const close = () => setOpen(false);
 
@@ -118,7 +142,6 @@ export default function StudentLayout() {
             <LogOut size={16} strokeWidth={1.8} />
             Déconnexion
           </button>
-          <p className="sl-sidebar__version">v1.0.0 · OFPPTHub 2026</p>
         </div>
       </aside>
 
@@ -167,9 +190,30 @@ export default function StudentLayout() {
               />
             </div>
 
-            <button className="sl-topbar__icon-btn" title="Notifications">
+            <button
+              className="sl-topbar__icon-btn"
+              title="Notifications"
+              onClick={() => navigate("/etudiant/notifications")}
+            >
               <Bell size={18} strokeWidth={1.8} />
-              <span className="sl-notif-dot" />
+              {notifCount > 0 && (
+                <span className="sl-badge">
+                  {notifCount > 9 ? "9+" : notifCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              className="sl-topbar__icon-btn"
+              title="Messages"
+              onClick={() => navigate("/etudiant/chat")}
+            >
+              <MessageCircle size={18} strokeWidth={1.8} />
+              {msgCount > 0 && (
+                <span className="sl-badge">
+                  {msgCount > 9 ? "9+" : msgCount}
+                </span>
+              )}
             </button>
 
             <div className="sl-topbar__divider" />

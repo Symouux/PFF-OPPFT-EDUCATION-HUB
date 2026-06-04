@@ -101,3 +101,13 @@ export const createResource = async (data) => {
   return res.data;
 };
 
+export const getStudentNotifications = async () => {
+  const res = await axios.get("/student/notifications");
+  return res.data;
+};
+
+export const markStudentNotificationsRead = async () => {
+  const res = await axios.put("/student/notifications/read");
+  return res.data;
+};
+

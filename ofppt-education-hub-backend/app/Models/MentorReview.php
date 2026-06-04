@@ -16,6 +16,7 @@ class MentorReview extends Model
         'presentation',
         'final_score',
         'comment',
+        'is_read',
     ];
 
     public function user()

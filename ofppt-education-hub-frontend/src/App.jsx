@@ -1,7 +1,8 @@
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import AuthPage from "./pages/Auth/AuthPage";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
-import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./pages/Admin/AdminLayout";
 import Dashboard from "./pages/Admin/Dashboard";
@@ -16,8 +17,7 @@ import MentorReview from "./pages/Mentor/MentorReview";
 import MentorReviews from "./pages/Mentor/reviews";
 import MentorProfile from "./pages/Mentor/MentorProfile";
 import MentorNotifications from "./pages/Mentor/MentorNotifications";
-import Home from "./pages/Home/home";
-
+import Home from "./pages/Home/home.jsx";
 import StudentLayout from "./pages/Student/StudentLayout";
 import StudentDashboard from "./pages/Student/StudentDashboard";
 import StudentProjects from "./pages/Student/StudentProjects";
@@ -25,6 +25,8 @@ import StudentMentors from "./pages/Student/StudentMentors";
 import StudentResources from "./pages/Student/StudentResources";
 import StudentChat from "./pages/Student/StudentChat";
 import StudentProfile from "./pages/Student/StudentProfile";
+import StudentLeaderboard from "./pages/Student/StudentLeaderboard";
+import StudentNotifications from "./pages/Student/StudentNotifications";
 
 export default function App() {
   return (
@@ -50,10 +52,12 @@ export default function App() {
         <Route path="/etudiant" element={<StudentLayout />}>
           <Route index element={<StudentDashboard />} />
           <Route path="projects" element={<StudentProjects />} />
+          <Route path="notifications" element={<StudentNotifications />} />
           <Route path="mentors" element={<StudentMentors />} />
           <Route path="resources" element={<StudentResources />} />
           <Route path="chat" element={<StudentChat />} />
           <Route path="profile" element={<StudentProfile />} />
+          <Route path="leaderboard" element={<StudentLeaderboard />} />
         </Route>
       </Route>
 

@@ -47,6 +47,9 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/mentors', [StudentMentorRequestController::class, 'getMentors']);
 
         Route::post('/projects/{id}/vote', [StudentVoteController::class, 'store']);
+
+        Route::get('/student/notifications', [\App\Http\Controllers\Student\StudentNotificationController::class, 'index']);
+        Route::put('/student/notifications/read', [\App\Http\Controllers\Student\StudentNotificationController::class, 'markAsRead']);
     });
 
     Route::middleware('publisher')->group(function () {
