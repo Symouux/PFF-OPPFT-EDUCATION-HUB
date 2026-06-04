@@ -25,6 +25,7 @@ import StudentResources from "./pages/Student/StudentResources";
 import StudentChat from "./pages/Student/StudentChat";
 import StudentProfile from "./pages/Student/StudentProfile";
 import StudentLeaderboard from "./pages/Student/StudentLeaderboard";
+import StudentNotifications from "./pages/Student/StudentNotifications";
 
 export default function App() {
   return (
@@ -48,6 +49,7 @@ export default function App() {
         <Route path="/etudiant" element={<StudentLayout />}>
           <Route index element={<StudentDashboard />} />
           <Route path="projects" element={<StudentProjects />} />
+          <Route path="notifications" element={<StudentNotifications />} />
           <Route path="mentors" element={<StudentMentors />} />
           <Route path="resources" element={<StudentResources />} />
           <Route path="chat" element={<StudentChat />} />

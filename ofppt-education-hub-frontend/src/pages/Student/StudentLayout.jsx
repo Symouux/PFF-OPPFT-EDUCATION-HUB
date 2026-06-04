@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -15,11 +15,13 @@ import {
   Trophy,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import axios from "../../api/axios";
 import "./Student.css";
 
 const NAV_ITEMS = [
   { to: "/etudiant", label: "Dashboard", icon: LayoutDashboard },
   { to: "/etudiant/projects", label: "Mes Projets", icon: FolderKanban },
+  { to: "/etudiant/notifications", label: "Notifications", icon: Bell },
   { to: "/etudiant/mentors", label: "Mentors", icon: UserCheck },
   { to: "/etudiant/resources", label: "Ressources", icon: BookOpen },
   { to: "/etudiant/chat", label: "Messages", icon: MessageSquare },
@@ -32,6 +34,20 @@ export default function StudentLayout() {
   const location = useLocation();
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
+  const [notifCount, setNotifCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCount = () => {
+      axios
+        .get("/student/notifications")
+        .then((res) => setNotifCount(res.data.unread_count ?? 0))
+        .catch(() => {});
+    };
+
+    fetchCount();
+    const interval = setInterval(fetchCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const close = () => setOpen(false);
 
@@ -169,9 +185,17 @@ export default function StudentLayout() {
               />
             </div>
 
-            <button className="sl-topbar__icon-btn" title="Notifications">
+            <button
+              className="sl-topbar__icon-btn"
+              title="Notifications"
+              onClick={() => navigate("/etudiant/notifications")}
+            >
               <Bell size={18} strokeWidth={1.8} />
-              <span className="sl-notif-dot" />
+              {notifCount > 0 && (
+                <span className="sl-badge">
+                  {notifCount > 9 ? "9+" : notifCount}
+                </span>
+              )}
             </button>
 
             <div className="sl-topbar__divider" />
