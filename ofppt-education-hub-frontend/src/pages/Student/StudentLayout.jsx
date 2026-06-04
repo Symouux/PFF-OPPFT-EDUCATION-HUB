@@ -12,6 +12,7 @@ import {
   Menu,
   X,
   ChevronRight,
+  Trophy,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import "./Student.css";
@@ -22,6 +23,7 @@ const NAV_ITEMS = [
   { to: "/etudiant/mentors", label: "Mentors", icon: UserCheck },
   { to: "/etudiant/resources", label: "Ressources", icon: BookOpen },
   { to: "/etudiant/chat", label: "Messages", icon: MessageSquare },
+  { to: "/etudiant/leaderboard", label: "Classement", icon: Trophy },
   { to: "/etudiant/profile", label: "Mon Profil", icon: User },
 ];
 

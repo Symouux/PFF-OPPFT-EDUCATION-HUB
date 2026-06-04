@@ -15,6 +15,8 @@ import MentorProjects from "./pages/Mentor/MentorProjects";
 import MentorReview from "./pages/Mentor/MentorReview";
 import MentorReviews from "./pages/Mentor/reviews";
 import MentorProfile from "./pages/Mentor/MentorProfile";
+import Home from "./pages/Home/home.jsx";
+import MentorNotifications from "./pages/Mentor/MentorNotifications";
 import StudentLayout from "./pages/Student/StudentLayout";
 import StudentDashboard from "./pages/Student/StudentDashboard";
 import StudentProjects from "./pages/Student/StudentProjects";
@@ -22,6 +24,7 @@ import StudentMentors from "./pages/Student/StudentMentors";
 import StudentResources from "./pages/Student/StudentResources";
 import StudentChat from "./pages/Student/StudentChat";
 import StudentProfile from "./pages/Student/StudentProfile";
+import StudentLeaderboard from "./pages/Student/StudentLeaderboard";
 
 export default function App() {
   return (
@@ -49,6 +52,7 @@ export default function App() {
           <Route path="resources" element={<StudentResources />} />
           <Route path="chat" element={<StudentChat />} />
           <Route path="profile" element={<StudentProfile />} />
+          <Route path="leaderboard" element={<StudentLeaderboard />} />
         </Route>
       </Route>
       {/* Mentor route*/}
