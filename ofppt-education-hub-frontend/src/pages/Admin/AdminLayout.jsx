@@ -83,12 +83,11 @@ const AdminLayout = () => {
         <div className="al-sidebar__footer">
           <button
             className="al-logout"
-            onClick={() => { close(); navigate('/'); }}
+            onClick={() => { close(); navigate('/login'); }}
           >
             <LogOut size={16} strokeWidth={1.8} />
-            Quitter Admin
+            Déconnexion
           </button>
-          <p className="al-sidebar__version">v1.0.0 · OFPPT 2025</p>
         </div>
       </aside>
 
