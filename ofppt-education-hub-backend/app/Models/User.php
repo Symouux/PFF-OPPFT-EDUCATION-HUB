@@ -25,7 +25,8 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'role',
-        'date_inscription'
+        'date_inscription',
+        'is_blocked'
     ];
 
     /**
@@ -78,5 +79,57 @@ class User extends Authenticatable implements JWTSubject
     public function profil()
     {
         return $this->hasOne(Profil::class, 'user_id');
+    }
+
+    // relation One To Many un etudiant peux publier plusieurs projets
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'utilisateur_id');
+    }
+
+    //un etudiant peut voter plusieurs fois pour differente projet
+    public function votes()
+    {
+        return $this->hasMany(Vote::class, 'utilisateur_id');
+    }
+
+    //un user(etudiant mentore) peut ajouter des ressource
+    public function resources()
+    {
+        return $this->hasMany(Resource::class, 'utilisateur_id');
+    }
+
+    // Link to the user's mentor profile
+    public function mentorProfile() {
+        return $this->hasOne(MentorProfile::class, 'mentor_id');
+    }
+
+
+    public function mentorReviews()
+    {
+        return $this->hasMany(MentorReview::class, 'mentor_id');
+    }
+
+    public function mentorRequestStudent() {
+        return $this->hasMany(ProjectMentorRequest::class, 'etudiant_id');
+    }
+
+    public function mentorRequestMentor() {
+        return $this->hasMany(ProjectMentorRequest::class, 'mentor_id');
+    }
+
+    // Conversations started by this user
+    public function conversationsAsFirstUser() {
+        return $this->hasMany(Conversation::class, 'user_one');
+    }
+
+    // Conversations where this user was invited
+    public function conversationsAsSecondUser() {
+        return $this->hasMany(Conversation::class, 'user_two');
+    }
+
+    // Messages sent by this user
+    public function messages() {
+        return $this->hasMany(Message::class, 'sender_id');
     }
 }

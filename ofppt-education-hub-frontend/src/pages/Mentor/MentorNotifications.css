@@ -1,0 +1,255 @@
+/* MentorNotifications.css */
+
+.mn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mn-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 200px auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  animation: fadeUp 0.35s ease both;
+}
+
+.mn-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Unread highlight */
+.mn-card--unread {
+  border-left: 3px solid var(--accent);
+  padding-left: 21px;
+}
+
+.mn-card__dot {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+/* Left — student */
+.mn-card__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mn-card__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  font-family: "Syne", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mn-card__student-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0 0 3px;
+}
+
+.mn-card__student-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Divider */
+.mn-card__divider {
+  width: 1px;
+  height: 60px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* Center — project */
+.mn-card__project {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.mn-card__project-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mn-card__category {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(14, 165, 233, 0.1);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.mn-card__date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.mn-card__project-title {
+  font-family: "Syne", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.mn-card__project-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.mn-card__techs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mn-card__tech {
+  font-size: 11px;
+  background: rgba(15, 76, 129, 0.07);
+  color: var(--primary);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.mn-card__link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  width: fit-content;
+}
+.mn-card__link:hover {
+  text-decoration: underline;
+}
+
+/* Right — actions */
+.mn-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.mn-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 20px;
+  border-radius: var(--radius-sm);
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.16s;
+  min-width: 120px;
+}
+
+.mn-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.mn-btn--accept {
+  background: var(--primary);
+  color: #fff;
+}
+.mn-btn--accept:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.mn-btn--reject {
+  background: none;
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.mn-btn--reject:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.06);
+  border-color: var(--danger);
+}
+
+/* Empty */
+.mn-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 20px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.mn-empty h3 {
+  font-family: "Syne", sans-serif;
+  font-size: 18px;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.mn-empty p {
+  font-size: 13px;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .mn-card {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .mn-card__divider {
+    display: none;
+  }
+  .mn-card__actions {
+    flex-direction: row;
+  }
+  .mn-btn {
+    flex: 1;
+  }
+}

@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('project_mentor_requests', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('project_id')
+                ->constrained('projects')
+                ->onDelete('cascade');
+            $table->foreignId('etudiant_id')
+                ->constrained('users')
+                ->onDelete('cascade');
+            $table->foreignId('mentor_id')
+                ->constrained('users')
+                ->onDelete('cascade');
+            $table->enum('status', ['pending', 'accepted', 'rejected'])
+                ->default('pending');
+            $table->boolean('is_read')->default(false);
+            $table->unique(['project_id', 'etudiant_id', 'mentor_id']);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('project_mentor_requests');
+    }
+};

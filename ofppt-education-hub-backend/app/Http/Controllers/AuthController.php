@@ -10,25 +10,19 @@ class AuthController extends Controller
 {
     public function register(Request $req)
     {
-        $email = $req->email;
-        $password = $req->password;
-        $role = $req->role ?? 'etudiant';
+        $data = $req->validate([
+            'nom_complet' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'bio' => ['nullable', 'string'],
+            'photo' => ['nullable', 'image', 'max:2048'],
+            'lien_linkedin' => ['nullable', 'url'],
+            'lien_github' => ['nullable', 'url'],
+        ]);
 
-        // 1/ Email Check, ElAnani Comment
-        $exists = User::where('email', $email)->first();
-
-        if ($exists) {
-            return response()->json([
-                'message' => 'Email Deja Existe !'
-            ], 401);
-        }
-
-        // 2/ Role Check, ElAnani Comment
-        if (!in_array($role, ['etudiant', 'mentor', 'admin'])) {
-            return response()->json([
-                'message' => 'Invalid role'
-            ], 400);
-        }
+        $email = $data['email'];
+        $password = $data['password'];
+        $role = 'etudiant';
 
         // 2/ Password Hash, ElAnani Comment
         $password_hash = Hash::make($password);
@@ -50,11 +44,11 @@ class AuthController extends Controller
 
         // 5/ Create Profile, ElAnani Comment
         $user->profil()->create([
-            'nom_complet' => $req->nom_complet,
-            'bio' => $req->bio,
+            'nom_complet' => $data['nom_complet'],
+            'bio' => $data['bio'] ?? null,
             'photo' => $photoPath,
-            'lien_linkedin' => $req->lien_linkedin,
-            'lien_github' => $req->lien_github,
+            'lien_linkedin' => $data['lien_linkedin'] ?? null,
+            'lien_github' => $data['lien_github'] ?? null,
             'score_mensuel' => 0
         ]);
 
@@ -76,6 +70,12 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'User not found !'
             ], 404);
+        }
+
+        if($user->is_blocked){
+            return response()->json([
+                'message' => 'Your account is blocked'
+            ], 403);
         }
 
         // 2/ Compare Password, ElAnani Comment

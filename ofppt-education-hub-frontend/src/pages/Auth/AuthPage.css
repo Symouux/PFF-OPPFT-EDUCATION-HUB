@@ -17,7 +17,7 @@
 }
 
 /* BODY */
-body {
+.auth-page {
   background: var(--bg);
   display: flex;
   justify-content: center;
