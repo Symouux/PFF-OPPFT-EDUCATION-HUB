@@ -21,7 +21,7 @@ class AdminController extends Controller
     // 1) recuperer tout les users
     public function getAllUsers()
     {
-        $users = User::orderBy('date_inscription', 'desc')->paginate(10);
+        $users = User::with('profil')->orderBy('date_inscription', 'desc')->paginate(10);
 
         return response()->json([
             'message' => 'Liste des utilisateurs récupérée avec succès',
@@ -138,7 +138,7 @@ class AdminController extends Controller
     public function getAllProjects()
     {
         // On charge aussi l'étudiant qui a publié chaque projet
-        $projects = Project::with('user')
+        $projects = Project::with('user.profil')
             ->orderBy('date_publication', 'desc')
             ->get();
 
