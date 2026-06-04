@@ -12,6 +12,7 @@ use App\Models\Resource;
 use Illuminate\Http\Request;
 use App\Imports\UsersImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -287,8 +288,59 @@ class AdminController extends Controller
                 'total_votes'    => Vote::count(),
 
                 //projet gagante mu moiis
-                'projet_gagnant'    => Project::where('estGagantMois', true)->first(),
+                'projet_gagnant' => Project::with('user.profil')->where('estGagantMois', true)->first(),
             ]
         ], 200);
     }
+
+    public function archivePreviousMonthProjects()
+{
+    try {
+        // 1️⃣ تحديد تواريخ الشهر الفايت (شهر 5)
+        $debutMoisDernier = Carbon::now()->subMonth()->startOfMonth();
+        $finMoisDernier = Carbon::now()->subMonth()->endOfMonth();
+
+        // 2️⃣ البحث على المشروع البطل لي عنده أعلى سكور ف الشهر الفايت ويكون active
+        // 💡 زدنا 'user.profil' باش الـ Frontend يلقى الـ nom_complet نيشان
+        $projetGagnant = Project::with('user.profil')
+            ->whereBetween('date_publication', [$debutMoisDernier, $finMoisDernier])
+            ->where('status', 'active')
+            ->orderBy('global_score', 'desc')
+            ->first();
+
+        // 3️⃣ إيلا لـقينا مشروع بطل، نرجعوه هو الـ Gagnant
+        if ($projetGagnant) {
+            $projetGagnant->update([
+                'estGagantMois' => true
+            ]);
+        }
+
+        // 4️⃣ أرشفة جـميع مشاريع الشهر الفايت (ترجيع الـ status لـ archived)
+        $nbProjetsArchives = Project::whereBetween('date_publication', [$debutMoisDernier, $finMoisDernier])
+            ->where('status', 'active')
+            ->update([
+                'status' => 'archived'
+            ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => $projetGagnant 
+                ? "L'archivage a été effectué. Le projet gagnant est : " . $projetGagnant->titre
+                : "L'archivage a été effectué, mais aucun projet n'a été trouvé pour le mois dernier.",
+            'data' => [
+                'projet_gagnant' => $projetGagnant,
+                'projets_archives_count' => $nbProjetsArchives
+            ]
+        ], 200);
+
+    } catch (\Exception $e) {
+        // 👈 إيلا وقع مشكل، هاد السطر غايخليه يبان ليك ف الـ Console أو الـ log د Laravel
+        return response()->json([
+            'success' => false,
+            'message' => "Erreur serveur : " . $e->getMessage()
+        ], 500);
+    }
 }
+}
+
+
