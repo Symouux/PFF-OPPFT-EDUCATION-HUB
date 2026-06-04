@@ -450,14 +450,14 @@ const Dashboard = () => {
           marginTop: '20px'
         }}>
 
-          <button style={{
+          {/* <button style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
             padding: '12px', backgroundColor: 'white', border: '1px solid #e2e8f0',
             borderRadius: '8px', color: '#0f2442', cursor: 'pointer', fontWeight: '600'
           }}>
             <RefreshCcw size={18} color="#c9a84c" />
             <span>Réinitialiser les Votes</span>
-          </button>
+          </button> */}
 
           <button
             onClick={handleMonthlyArchive}

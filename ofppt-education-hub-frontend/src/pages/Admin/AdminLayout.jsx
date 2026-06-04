@@ -49,7 +49,7 @@ const AdminLayout = () => {
               <path d="M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
             </svg>
           </span>
-          <span className="al-logo__text">OFPPT<em>Hub</em></span>
+          <span className="al-logo__text">Admin<em>Hub</em></span>
         </div>
 
         {/* Nav */}
