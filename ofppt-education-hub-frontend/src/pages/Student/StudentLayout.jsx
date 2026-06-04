@@ -7,6 +7,7 @@ import {
   UserCheck,
   BookOpen,
   MessageSquare,
+  MessageCircle,
   User,
   LogOut,
   Menu,
@@ -35,17 +36,22 @@ export default function StudentLayout() {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [notifCount, setNotifCount] = useState(0);
+  const [msgCount, setMsgCount] = useState(0);
 
   useEffect(() => {
-    const fetchCount = () => {
+    const fetchCounts = () => {
       axios
         .get("/student/notifications")
         .then((res) => setNotifCount(res.data.unread_count ?? 0))
         .catch(() => {});
+      axios
+        .get("/messages/unread/count")
+        .then((res) => setMsgCount(res.data.unread_count ?? 0))
+        .catch(() => {});
     };
 
-    fetchCount();
-    const interval = setInterval(fetchCount, 30000);
+    fetchCounts();
+    const interval = setInterval(fetchCounts, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -136,7 +142,6 @@ export default function StudentLayout() {
             <LogOut size={16} strokeWidth={1.8} />
             Déconnexion
           </button>
-          <p className="sl-sidebar__version">v1.0.0 · OFPPTHub 2026</p>
         </div>
       </aside>
 
@@ -194,6 +199,19 @@ export default function StudentLayout() {
               {notifCount > 0 && (
                 <span className="sl-badge">
                   {notifCount > 9 ? "9+" : notifCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              className="sl-topbar__icon-btn"
+              title="Messages"
+              onClick={() => navigate("/etudiant/chat")}
+            >
+              <MessageCircle size={18} strokeWidth={1.8} />
+              {msgCount > 0 && (
+                <span className="sl-badge">
+                  {msgCount > 9 ? "9+" : msgCount}
                 </span>
               )}
             </button>

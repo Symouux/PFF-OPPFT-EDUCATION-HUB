@@ -14,8 +14,12 @@ import {
   MoreHorizontal,
   CheckCheck,
   Check,
+  Plus,
+  X,
+  MessageCircle,
 } from "lucide-react";
 import axios from "../../api/axios";
+import { getMentors, createConversation } from "../../api/studentApi";
 import { useAuth } from "../../context/AuthContext";
 import "../Mentor/MentorChat.css";
 
@@ -91,6 +95,10 @@ export default function StudentChat() {
   const [loadingConvs, setLoadingConvs] = useState(true);
   const [loadingMsgs, setLoadingMsgs] = useState(false);
 
+  const [showNewModal, setShowNewModal] = useState(false);
+  const [mentors, setMentors] = useState([]);
+  const [loadingMentors, setLoadingMentors] = useState(false);
+
   const bottomRef = useRef(null);
   const pollRef = useRef(null);
 
@@ -162,6 +170,36 @@ export default function StudentChat() {
     }
   };
 
+  const openNewConversation = async () => {
+    setShowNewModal(true);
+    if (mentors.length === 0) {
+      setLoadingMentors(true);
+      try {
+        const res = await getMentors();
+        setMentors(res.data || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingMentors(false);
+      }
+    }
+  };
+
+  const startConversation = async (mentor) => {
+    try {
+      const conv = await createConversation(mentor.id);
+      setShowNewModal(false);
+      setActiveConv(conv);
+      setConversations((prev) => {
+        const exists = prev.find((c) => c.id === conv.id);
+        return exists ? prev : [conv, ...prev];
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Impossible de démarrer la conversation. Veuillez réessayer.");
+    }
+  };
+
   const handleKey = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -197,6 +235,9 @@ export default function StudentChat() {
       <aside className="mc-sidebar">
         <div className="mc-sidebar__head">
           <h2 className="mc-sidebar__title">Messages</h2>
+          <button className="mc-icon-btn" title="Nouveau message" onClick={openNewConversation}>
+            <Edit size={18} />
+          </button>
         </div>
 
         <div className="mc-search">
@@ -272,18 +313,18 @@ export default function StudentChat() {
             <p>
               Sélectionnez un fil de discussion pour échanger sur vos projets académiques.
             </p>
+            <button className="mc-empty-btn" onClick={openNewConversation}>
+              <Plus size={16} /> Nouvelle conversation
+            </button>
           </div>
         ) : (
           <>
-            {/* Topbar */}
             <div className="mc-main__topbar">
               <div className="mc-main__topbar-left">
                 <Avatar profil={other?.profil} size={38} online />
                 <div>
                   <p className="mc-main__name">
-                    {other?.profil?.nom_complet ??
-                      other?.email ??
-                      "Utilisateur"}
+                    {other?.profil?.nom_complet ?? other?.email ?? "Utilisateur"}
                   </p>
                   <p className="mc-main__status">
                     <span className="mc-dot" /> Mentor
@@ -291,59 +332,33 @@ export default function StudentChat() {
                 </div>
               </div>
               <div className="mc-main__topbar-right">
-                <button className="mc-icon-btn" title="Appel vidéo">
-                  <Video size={18} />
-                </button>
-                <button className="mc-icon-btn" title="Appel audio">
-                  <Phone size={18} />
-                </button>
-                <button className="mc-icon-btn" title="Infos">
-                  <Info size={18} />
-                </button>
+                <button className="mc-icon-btn" title="Appel vidéo"><Video size={18} /></button>
+                <button className="mc-icon-btn" title="Appel audio"><Phone size={18} /></button>
+                <button className="mc-icon-btn" title="Infos"><Info size={18} /></button>
               </div>
             </div>
 
-            {/* Messages */}
             <div className="mc-messages">
               {loadingMsgs && messages.length === 0 && (
                 <div className="mc-messages__loading">
                   <span className="sd-spinner" /> Chargement...
                 </div>
               )}
-
               {Object.entries(grouped).map(([day, msgs]) => (
                 <div key={day}>
-                  <div className="mc-day-separator">
-                    <span>{day.toUpperCase()}</span>
-                  </div>
-
+                  <div className="mc-day-separator"><span>{day.toUpperCase()}</span></div>
                   {msgs.map((msg) => {
                     const isMine = msg.sender_id === meId;
                     return (
-                      <div
-                        key={msg.id}
-                        className={`mc-msg${isMine ? " mc-msg--mine" : " mc-msg--other"}`}
-                      >
-                        {!isMine && (
-                          <Avatar
-                            profil={msg.sender?.profil ?? other?.profil}
-                            size={32}
-                          />
-                        )}
-
+                      <div key={msg.id} className={`mc-msg${isMine ? " mc-msg--mine" : " mc-msg--other"}`}>
+                        {!isMine && <Avatar profil={msg.sender?.profil ?? other?.profil} size={32} />}
                         <div className="mc-msg__content">
                           <div className="mc-msg__bubble">{msg.message}</div>
                           <div className="mc-msg__meta">
                             <span>{formatTime(msg.created_at)}</span>
-                            {isMine &&
-                              (msg.is_read ? (
-                                <CheckCheck size={13} className="mc-read" />
-                              ) : (
-                                <Check size={13} className="mc-sent" />
-                              ))}
+                            {isMine && (msg.is_read ? <CheckCheck size={13} className="mc-read" /> : <Check size={13} className="mc-sent" />)}
                           </div>
                         </div>
-
                         {isMine && <Avatar profil={meProfil} size={32} />}
                       </div>
                     );
@@ -353,30 +368,14 @@ export default function StudentChat() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Input */}
             <div className="mc-input-bar">
-              <button className="mc-icon-btn">
-                <Smile size={18} />
-              </button>
-              <button className="mc-icon-btn">
-                <Paperclip size={18} />
-              </button>
-              <button className="mc-icon-btn">
-                <Image size={18} />
-              </button>
-              <textarea
-                className="mc-input"
-                placeholder={`Répondre...`}
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={handleKey}
-                rows={1}
-              />
-              <button
-                className={`mc-send-btn${text.trim() ? " mc-send-btn--active" : ""}`}
-                onClick={sendMessage}
-                disabled={!text.trim()}
-              >
+              <button className="mc-icon-btn"><Smile size={18} /></button>
+              <button className="mc-icon-btn"><Paperclip size={18} /></button>
+              <button className="mc-icon-btn"><Image size={18} /></button>
+              <textarea className="mc-input" placeholder="Répondre..." value={text}
+                onChange={(e) => setText(e.target.value)} onKeyDown={handleKey} rows={1} />
+              <button className={`mc-send-btn${text.trim() ? " mc-send-btn--active" : ""}`}
+                onClick={sendMessage} disabled={!text.trim()}>
                 <Send size={18} />
               </button>
             </div>
@@ -448,6 +447,48 @@ export default function StudentChat() {
             )}
           </div>
         </aside>
+      )}
+
+      {/* ══ New conversation modal ══ */}
+      {showNewModal && (
+        <div className="sd-modal-overlay" onClick={() => setShowNewModal(false)}>
+          <div className="sd-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "500px" }}>
+            <div className="sd-modal__head">
+              <h3 className="sd-modal__title">Nouvelle conversation</h3>
+              <button className="sd-modal__close" onClick={() => setShowNewModal(false)}>
+                <X size={20} />
+              </button>
+            </div>
+            <div className="sd-modal__body" style={{ maxHeight: "400px", overflowY: "auto" }}>
+              {loadingMentors ? (
+                <div className="sd-loading" style={{ height: "120px" }}>
+                  <span className="sd-spinner" /> Chargement des mentors...
+                </div>
+              ) : mentors.length === 0 ? (
+                <p style={{ textAlign: "center", color: "var(--text-muted)", padding: "40px 0" }}>
+                  Aucun mentor disponible pour le moment.
+                </p>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                  {mentors.map((mentor) => (
+                    <button
+                      key={mentor.id}
+                      className="mc-new-conv-item"
+                      onClick={() => startConversation(mentor)}
+                    >
+                      <Avatar profil={mentor.profil} size={40} />
+                      <div className="mc-new-conv-item__body">
+                        <strong>{mentor.profil?.nom_complet || "Mentor"}</strong>
+                        <span>{mentor.mentor_profile?.categories?.name || "Spécialiste"}</span>
+                      </div>
+                      <MessageCircle size={16} className="mc-new-conv-item__icon" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -1,0 +1,435 @@
+/* ════════════════════════════════════════════════════════
+   StudentDashboard.css — Social Hub Feed (post-style)
+   ════════════════════════════════════════════════════════ */
+
+/* ── Root ── */
+.sh-root {
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 100%;
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.sh-header__title {
+  font-family: "Syne", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 0 4px;
+}
+
+.sh-header__sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── Filters ── */
+.sh-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sh-filter-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sh-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  font-family: "Outfit", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-body);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sh-chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.sh-chip--active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.sh-search input {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  outline: none;
+  width: 220px;
+  background: var(--bg-card);
+  color: var(--text-body);
+  transition: border-color 0.15s;
+}
+
+.sh-search input:focus {
+  border-color: var(--primary-mid);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+/* ── Feed ── */
+.sh-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Post Card ── */
+.sh-post {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: shFadeUp 0.4s ease both;
+}
+
+.sh-post:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+@keyframes shFadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Post Header ── */
+.sh-post__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sh-post__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sh-post__avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  font-family: "Syne", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sh-post__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sh-post__meta strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.sh-post__meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.sh-post__cat {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(13, 148, 136, 0.1);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* ── Post Title & Description ── */
+.sh-post__title {
+  font-family: "Syne", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.sh-post__desc {
+  font-size: 14px;
+  color: var(--text-body);
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* ── Technologies ── */
+.sh-post__techs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sh-post__tag {
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--bg-page);
+  color: var(--primary);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+/* ── Preview Toggle ── */
+.sh-post__preview {
+  display: flex;
+  flex-direction: column;
+}
+
+.sh-preview-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-page);
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-body);
+  cursor: pointer;
+  transition: all 0.15s;
+  width: fit-content;
+}
+
+.sh-preview-toggle:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: #fff;
+}
+
+.sh-preview-body {
+  margin-top: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  animation: shSlideDown 0.25s ease both;
+}
+
+@keyframes shSlideDown {
+  from { opacity: 0; max-height: 0; }
+  to   { opacity: 1; max-height: 600px; }
+}
+
+.sh-preview-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ── GitHub Tree ── */
+.sh-github-tree {
+  border: none;
+}
+
+.sh-github-tree__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sh-github-tree__body {
+  max-height: 320px;
+  overflow-y: auto;
+  background: #faf9ff;
+}
+
+.sh-github-tree__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-body);
+  text-decoration: none;
+  transition: background 0.12s;
+}
+
+.sh-github-tree__item:last-child {
+  border-bottom: none;
+}
+
+.sh-github-tree__item:hover {
+  background: #f3f0ff;
+}
+
+.sh-github-tree__folder {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* ── Drive iframe ── */
+.sh-preview-iframe {
+  width: 100%;
+  height: 400px;
+  border: none;
+  background: #fdfdfd;
+}
+
+/* ── Post Actions ── */
+.sh-post__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+
+.sh-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+
+.sh-action-btn:hover:not(:disabled) {
+  background: var(--bg-page);
+  color: var(--primary);
+}
+
+.sh-action-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.sh-action-btn--voted {
+  color: var(--danger) !important;
+  background: rgba(239, 68, 68, 0.08) !important;
+}
+
+.sh-action-btn--link {
+  color: var(--accent);
+}
+
+.sh-action-btn--link:hover {
+  background: rgba(13, 148, 136, 0.08) !important;
+  color: var(--accent-hover) !important;
+}
+
+.sh-post__score {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.sh-post__score strong {
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+/* ── Empty State ── */
+.sh-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 20px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.sh-empty__icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--accent-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.sh-empty h3 {
+  font-family: "Syne", sans-serif;
+  font-size: 18px;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.sh-empty p {
+  font-size: 13px;
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .sh-root {
+    padding: 16px;
+  }
+  .sh-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sh-search input {
+    width: 100%;
+  }
+  .sh-post {
+    padding: 18px;
+  }
+  .sh-post__actions {
+    flex-wrap: wrap;
+  }
+}
