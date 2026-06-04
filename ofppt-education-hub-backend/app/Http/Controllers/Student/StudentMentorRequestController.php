@@ -71,7 +71,7 @@ class StudentMentorRequestController extends Controller
             'project_id' => $project->id,
             'etudiant_id' => auth()->id(),
             'mentor_id' => $mentor->id,
-            'status' => 'pending',
+            'status' => 'pending', 
             'is_read' => false
         ]);
 
@@ -96,6 +96,17 @@ class StudentMentorRequestController extends Controller
         return response()->json([
             'message' => 'All your projects requests !',
             'data' => $requests
+        ], 200);
+    }
+
+    public function getMentors()
+    {
+        $mentors = \App\Models\User::with(['profil', 'mentorProfile.categories'])
+                                    ->where('role', 'mentor')
+                                    ->get();
+
+        return response()->json([
+            'data' => $mentors
         ], 200);
     }
 }
