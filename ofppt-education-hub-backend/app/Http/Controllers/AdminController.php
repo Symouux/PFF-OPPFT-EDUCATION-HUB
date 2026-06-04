@@ -138,7 +138,7 @@ class AdminController extends Controller
     public function getAllProjects()
     {
         // On charge aussi l'étudiant qui a publié chaque projet
-        $projects = Project::with('user.profilcd ..')
+        $projects = Project::with('user.profil')
             ->orderBy('date_publication', 'desc')
             ->get();
 
