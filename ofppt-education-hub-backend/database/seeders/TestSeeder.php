@@ -49,7 +49,7 @@ class TestSeeder extends Seeder
         );
         Profil::firstOrCreate(
             ['user_id' => $mentor->id],
-            ['nom_complet' => 'Sara El Idrissi', 'bio' => 'Senior mentor']
+            ['nom_complet' => 'Khaoula ET-Taheri', 'bio' => 'Senior mentor']
         );
         MentorProfile::firstOrCreate(
             ['mentor_id' => $mentor->id],
