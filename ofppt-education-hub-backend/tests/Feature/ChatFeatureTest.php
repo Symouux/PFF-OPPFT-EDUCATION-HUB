@@ -17,15 +17,15 @@ class ChatFeatureTest extends TestCase
         $secondUser = $this->createUser('mentor');
 
         $firstResponse = $this->actingAs($firstUser, 'api')->postJson('/api/conversations', [
-            'user_id' => $secondUser->id,
+            'user_two' => $secondUser->id,
         ]);
 
         $firstResponse->assertOk()
-            ->assertJsonPath('user_one', min($firstUser->id, $secondUser->id))
-            ->assertJsonPath('user_two', max($firstUser->id, $secondUser->id));
+            ->assertJsonPath('user_one.id', min($firstUser->id, $secondUser->id))
+            ->assertJsonPath('user_two.id', max($firstUser->id, $secondUser->id));
 
         $secondResponse = $this->actingAs($secondUser, 'api')->postJson('/api/conversations', [
-            'user_id' => $firstUser->id,
+            'user_two' => $firstUser->id,
         ]);
 
         $secondResponse->assertOk()
@@ -37,7 +37,7 @@ class ChatFeatureTest extends TestCase
         $user = $this->createUser('etudiant');
 
         $this->actingAs($user, 'api')->postJson('/api/conversations', [
-            'user_id' => $user->id,
+            'user_two' => $user->id,
         ])->assertStatus(400)
             ->assertJsonPath('message', 'You cannot chat with yourself');
     }
@@ -48,7 +48,7 @@ class ChatFeatureTest extends TestCase
         $receiver = $this->createUser('mentor');
 
         $conversationId = $this->actingAs($sender, 'api')->postJson('/api/conversations', [
-            'user_id' => $receiver->id,
+            'user_two' => $receiver->id,
         ])->json('id');
 
         $this->actingAs($sender, 'api')->postJson('/api/messages', [
@@ -86,7 +86,7 @@ class ChatFeatureTest extends TestCase
         $outsider = $this->createUser('etudiant');
 
         $conversationId = $this->actingAs($sender, 'api')->postJson('/api/conversations', [
-            'user_id' => $receiver->id,
+            'user_two' => $receiver->id,
         ])->json('id');
 
         $this->actingAs($outsider, 'api')
