@@ -58,13 +58,20 @@ const ProjectsPage = () => {
         }
 
         // search by title or student name
+        // search by title or student name
         if (searchTerm) {
             const term = searchTerm.toLowerCase();
 
-            result = result.filter(p =>
-                (p.titre && p.titre.toLowerCase().includes(term)) ||
-                (p.user?.name && p.user.name.toLowerCase().includes(term))
-            );
+            result = result.filter(p => {
+                // 💡 جلب السّمية الكاملة من الـ profil ديال الـ user
+                const studentName = p.user?.profil?.nom_complet || p.user?.profil?.name || p.user?.name || '';
+                const projectTitle = p.titre || '';
+
+                return (
+                    projectTitle.toLowerCase().includes(term) ||
+                    studentName.toLowerCase().includes(term)
+                );
+            });
         }
 
         // update filtered list
@@ -179,7 +186,7 @@ const ProjectsPage = () => {
 
                                     {/* USER NAME */}
                                     <td className="student-name">
-                                        {project.user?.name || 'Utilisateur inconnu'}
+                                        {project.user?.profil?.nom_complet || project.user?.profil?.name || project.user?.name || 'Utilisateur inconnu'}
                                     </td>
 
                                     {/* VOTES */}

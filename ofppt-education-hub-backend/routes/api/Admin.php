@@ -41,3 +41,6 @@ Route::get('/stats', [AdminController::class, 'getDashboardStats']);
 
 Route::get('/resources', [AdminController::class, 'getAllResources']);
 Route::delete('/resources/{id}', [AdminController::class, 'deleteResource']);
+
+
+Route::post('/admin/projects/archive-monthly', [AdminController::class, 'archivePreviousMonthProjects']);

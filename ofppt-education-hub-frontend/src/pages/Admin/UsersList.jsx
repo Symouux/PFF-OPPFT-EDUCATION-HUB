@@ -53,9 +53,8 @@ const UsersPage = () => {
     fetchUsers();
   }, []);
 
-  // ================= FILTER + SEARCH =================
+ // ================= FILTER + SEARCH =================
   useEffect(() => {
-    // make sure users is an array
     let result = Array.isArray(users) ? [...users] : [];
 
     // filter by role if not "all"
@@ -65,16 +64,20 @@ const UsersPage = () => {
       );
     }
 
-    // search by name or email
+    // search by name (inside profile) or email
     if (searchTerm) {
-      result = result.filter(
-        (user) =>
-          user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.email?.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
+      result = result.filter((user) => {
+        // 💡 جلب السّمية من الـ profile وإيلا ما كانتش كياخد الـ user.name الإفتراضي
+        const fullName = user.profile?.nom_complet || user.profile?.name || user.name || "";
+        const email = user.email || "";
+        
+        return (
+          fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          email.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      });
     }
 
-    // update filtered list
     setFilteredUsers(result);
   }, [roleFilter, searchTerm, users]);
 
@@ -259,7 +262,7 @@ const UsersPage = () => {
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => (
                   <tr key={user.id}>
-                    <td className="user-name">{user.name || "N/A"}</td>
+                    <td className="user-name">{user.profil?.nom_complet || user.profil?.name || user.name || "N/A"}</td>
 
                     <td className="user-email">{user.email || "N/A"}</td>
 
