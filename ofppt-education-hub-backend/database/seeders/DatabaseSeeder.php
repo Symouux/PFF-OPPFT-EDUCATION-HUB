@@ -8,8 +8,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            TestSeeder::class,
-            ProjectTestSeeder::class
+            ProjectSeeder::class,
         ]);
     }
 }
