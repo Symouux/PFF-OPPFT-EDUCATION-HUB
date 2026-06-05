@@ -21,7 +21,11 @@ class MentorProfile extends Model
         return $this->belongsTo(User::class, 'mentor_id');
     }
 
-    public function category(): BelongsTo
+    public function categorie(): BelongsTo
+    {
+        return $this->belongsTo(Categorie::class, 'category_id');
+    }
+    public function categories(): BelongsTo
     {
         return $this->belongsTo(Categorie::class, 'category_id');
     }

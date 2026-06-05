@@ -142,3 +142,4 @@ vite.config.ts.timestamp-*
 node_modules
 .env
 dist
+PFF.tex
