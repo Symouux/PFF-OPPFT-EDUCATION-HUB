@@ -438,3 +438,42 @@
     grid-template-columns: 130px 1fr 40px;
   }
 }
+
+/* GitHub Tree Preview Styles */
+.preview-github-tree {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.github-tree-header {
+  background: var(--primary);
+  color: #fff;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.github-tree-body {
+  max-height: 350px;
+  overflow-y: auto;
+  background: #faf9ff;
+}
+
+.github-tree-item {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-body);
+}
+
+.github-tree-item:last-child {
+  border-bottom: none;
+}
+

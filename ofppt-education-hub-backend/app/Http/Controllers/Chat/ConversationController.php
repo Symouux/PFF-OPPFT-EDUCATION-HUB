@@ -31,17 +31,17 @@ class ConversationController extends Controller
         $user = auth('api')->user();
 
         $request->validate([
-            'user_id' => 'required|exists:users,id'
+            'user_two' => 'required|exists:users,id'
         ]);
 
-        if ($request->user_id == $user->id) {
+        if ($request->user_two == $user->id) {
             return response()->json([
                 'message' => 'You cannot chat with yourself'
             ], 400);
         }
 
-        $userOne = min($user->id, $request->user_id);
-        $userTwo = max($user->id, $request->user_id);
+        $userOne = min($user->id, $request->user_two);
+        $userTwo = max($user->id, $request->user_two);
 
         $conversation = Conversation::where('user_one', $userOne)
             ->where('user_two', $userTwo)
@@ -53,6 +53,8 @@ class ConversationController extends Controller
                 'user_two' => $userTwo,
             ]);
         }
+
+        $conversation->load(['userOne.profil', 'userTwo.profil']);
 
         return response()->json($conversation);
     }

@@ -49,7 +49,7 @@ const AdminLayout = () => {
               <path d="M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
             </svg>
           </span>
-          <span className="al-logo__text">OFPPT<em>Hub</em></span>
+          <span className="al-logo__text">Admin<em>Hub</em></span>
         </div>
 
         {/* Nav */}
@@ -83,12 +83,11 @@ const AdminLayout = () => {
         <div className="al-sidebar__footer">
           <button
             className="al-logout"
-            onClick={() => { close(); navigate('/'); }}
+            onClick={() => { close(); navigate('/login'); }}
           >
             <LogOut size={16} strokeWidth={1.8} />
-            Quitter Admin
+            Déconnexion
           </button>
-          <p className="al-sidebar__version">v1.0.0 · OFPPT 2025</p>
         </div>
       </aside>
 

@@ -1,7 +1,8 @@
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import AuthPage from "./pages/Auth/AuthPage";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
-import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./pages/Admin/AdminLayout";
 import Dashboard from "./pages/Admin/Dashboard";
@@ -16,10 +17,16 @@ import MentorReview from "./pages/Mentor/MentorReview";
 import MentorReviews from "./pages/Mentor/reviews";
 import MentorProfile from "./pages/Mentor/MentorProfile";
 import MentorNotifications from "./pages/Mentor/MentorNotifications";
-import Home from "./pages/Home/home";
-const AdminPage = () => <h1>Page Admin</h1>;
-
-const EtudiantPage = () => <h1>Page Étudiant</h1>;
+import Home from "./pages/Home/home.jsx";
+import StudentLayout from "./pages/Student/StudentLayout";
+import StudentDashboard from "./pages/Student/StudentDashboard";
+import StudentProjects from "./pages/Student/StudentProjects";
+import StudentMentors from "./pages/Student/StudentMentors";
+import StudentResources from "./pages/Student/StudentResources";
+import StudentChat from "./pages/Student/StudentChat";
+import StudentProfile from "./pages/Student/StudentProfile";
+import StudentLeaderboard from "./pages/Student/StudentLeaderboard";
+import StudentNotifications from "./pages/Student/StudentNotifications";
 
 export default function App() {
   return (
@@ -30,22 +37,30 @@ export default function App() {
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+
       {/* Admin route*/}
       <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
-
           <Route path="users" element={<UserList />} />
-
           <Route path="projects" element={<ProjectList />} />
-
-          {/* <Route path="resources" element={<ResourceList />} /> */}
         </Route>
       </Route>
+
       {/* Etudiant route*/}
       <Route element={<ProtectedRoute allowedRoles={["etudiant"]} />}>
-        <Route path="/etudiant" element={<EtudiantPage />} />
+        <Route path="/etudiant" element={<StudentLayout />}>
+          <Route index element={<StudentDashboard />} />
+          <Route path="projects" element={<StudentProjects />} />
+          <Route path="notifications" element={<StudentNotifications />} />
+          <Route path="mentors" element={<StudentMentors />} />
+          <Route path="resources" element={<StudentResources />} />
+          <Route path="chat" element={<StudentChat />} />
+          <Route path="profile" element={<StudentProfile />} />
+          <Route path="leaderboard" element={<StudentLeaderboard />} />
+        </Route>
       </Route>
+
       {/* Mentor route*/}
       <Route element={<ProtectedRoute allowedRoles={["mentor"]} />}>
         <Route path="/mentor" element={<MentorLayout />}>

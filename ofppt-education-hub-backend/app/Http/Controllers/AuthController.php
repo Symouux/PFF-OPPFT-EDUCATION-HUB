@@ -125,4 +125,26 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function updateProfile(Request $req)
+    {
+        $user = auth('api')->user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $data = $req->validate([
+            'nom_complet' => ['required', 'string', 'max:255'],
+            'bio' => ['nullable', 'string'],
+            'lien_linkedin' => ['nullable', 'url'],
+            'lien_github' => ['nullable', 'url'],
+        ]);
+
+        $user->profil()->update($data);
+
+        return response()->json([
+            'message' => 'Profile updated successfully!',
+            'data' => $user->load('profil')
+        ], 200);
+    }
 }

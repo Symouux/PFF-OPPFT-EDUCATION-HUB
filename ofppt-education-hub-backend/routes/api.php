@@ -28,6 +28,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/me',       [AuthController::class, 'me']);
     Route::post('/logout',  [AuthController::class, 'logout']);
+    Route::put('/profile',  [AuthController::class, 'updateProfile']);
 
     // Admin
     Route::middleware('admin')
@@ -43,8 +44,12 @@ Route::middleware('auth:api')->group(function () {
 
         Route::post('/mentor_requests', [StudentMentorRequestController::class, 'store']);
         Route::get('/mentor_requests', [StudentMentorRequestController::class, 'index']);
+        Route::get('/mentors', [StudentMentorRequestController::class, 'getMentors']);
 
         Route::post('/projects/{id}/vote', [StudentVoteController::class, 'store']);
+
+        Route::get('/student/notifications', [\App\Http\Controllers\Student\StudentNotificationController::class, 'index']);
+        Route::put('/student/notifications/read', [\App\Http\Controllers\Student\StudentNotificationController::class, 'markAsRead']);
     });
 
     Route::middleware('publisher')->group(function () {
@@ -76,8 +81,13 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/messages/unread/count', [MessageController::class, 'unreadCount']);
 
-    // Projects Show
+    // Projects & Categories
+    Route::get('/projects', [ProjectController::class, 'index']);
+    Route::get('/categories', [ProjectController::class, 'getCategories']);
     Route::get('/projects/{id}', [ProjectController::class, 'show']);
+
+    // Resources
+    Route::get('/resources', [ResourceController::class, 'index']);
 
 
 
